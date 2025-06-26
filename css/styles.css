@@ -20,52 +20,53 @@ h1 {
     font-size: 1.8em;
     margin: 5px 0 15px 0;
     text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    display: none; /* 제목 숨김 처리 */
 }
 
-/* 게임 컨테이너 - 세로 배치 */
+/* 게임 컨테이너 - 기본적으로 좌우 배치 (데스크톱과 가로모드 공통) */
 .game-container {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 15px;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 20px;
     max-width: 100%;
     margin: 0 auto;
 }
 
 .grid-container {
     position: relative;
-    width: 100%;
     display: flex;
     justify-content: center;
 }
 
-/* 격자 스타일 - 모바일 최적화 */
+/* 격자 스타일 - 데스크톱 기본 크기 */
 .grid {
     display: grid;
-    grid-template-columns: repeat(5, 60px);
-    grid-template-rows: repeat(5, 60px);
-    gap: 2px;
+    grid-template-columns: repeat(5, 70px);
+    grid-template-rows: repeat(5, 70px);
+    gap: 3px;
     background: #fff;
-    padding: 10px;
-    border-radius: 10px;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+    padding: 12px;
+    border-radius: 12px;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.3);
     position: relative;
 }
 
 .cell {
     background: #f0f8ff;
     border: 2px solid #ccc;
-    border-radius: 6px;
+    border-radius: 8px;
     position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-/* 로봇 스타일 - 모바일 최적화 */
+/* 로봇 스타일 - 데스크톱 기본 크기 */
 .robot {
-    width: 50px;
-    height: 50px;
+    width: 60px;
+    height: 60px;
     position: relative;
     display: flex;
     align-items: center;
@@ -75,14 +76,14 @@ h1 {
 }
 
 .robot img {
-    width: 45px;
-    height: 45px;
+    width: 55px;
+    height: 55px;
     object-fit: contain;
     transition: transform 0.9s ease;
-    filter: drop-shadow(1px 1px 2px rgba(0,0,0,0.3));
+    filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));
 }
 
-/* 상점 스타일 - 모바일 최적화 */
+/* 상점 스타일 - 데스크톱 기본 크기 */
 .store {
     position: absolute;
     top: 0;
@@ -97,11 +98,11 @@ h1 {
 }
 
 .store img {
-    width: 40px;
-    height: 40px;
+    width: 50px;
+    height: 50px;
     object-fit: contain;
     transition: transform 0.3s ease;
-    filter: drop-shadow(1px 1px 2px rgba(0,0,0,0.3));
+    filter: drop-shadow(1px 1px 3px rgba(0,0,0,0.3));
 }
 
 /* 로봇과 상점이 같은 셀에 있을 때의 스타일 */
@@ -115,49 +116,49 @@ h1 {
     background: #f9f9f9;
 }
 
-/* 카드 덱 스타일 - 모바일 가로 배치 */
+/* 카드 덱 스타일 - 데스크톱 세로 배치 */
 .card-deck {
     display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 8px;
+    flex-direction: column;
+    gap: 12px;
     background: rgba(255,255,255,0.1);
-    padding: 15px;
-    border-radius: 10px;
-    width: 100%;
-    max-width: 320px;
-    justify-content: center;
+    padding: 18px;
+    border-radius: 12px;
+    min-width: 140px;
+    max-height: 400px;
+    overflow-y: auto;
+    justify-content: flex-start;
 }
 
 .card {
-    width: 65px;
+    width: 75px;
     height: 65px;
     background: #fff;
-    border: 2px solid #333;
-    border-radius: 10px;
+    border: 3px solid #333;
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 20px;
     cursor: pointer;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     transition: all 0.2s ease;
     color: black;
     user-select: none;
-    touch-action: manipulation; /* 모바일 터치 최적화 */
+    touch-action: manipulation;
 }
 
 /* 카드 아이콘 스타일 */
 .card-icon {
-    width: 35px;
-    height: 35px;
+    width: 40px;
+    height: 40px;
     object-fit: contain;
     pointer-events: none;
 }
 
 .card:hover, .card:active {
-    transform: scale(1.05);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.3);
     border-color: #4CAF50;
 }
 
@@ -165,42 +166,43 @@ h1 {
     background: #fff9c4;
     color: #4CAF50;
     font-weight: bold;
-    font-size: 16px;
+    font-size: 18px;
     cursor: pointer;
 }
 
 .go-card:hover, .go-card:active {
     background: #fff5a1;
-    transform: scale(1.05);
-    box-shadow: 0 4px 8px rgba(255, 249, 196, 0.4);
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 6px 12px rgba(255, 249, 196, 0.4);
 }
 
 /* 리셋 버튼 스타일 */
 .reset-btn {
-    width: 65px;
-    height: 40px;
+    width: 75px;
+    height: 45px;
     background: #ff6b6b;
     color: white;
     border: none;
-    border-radius: 10px;
-    font-size: 12px;
+    border-radius: 12px;
+    font-size: 13px;
     font-weight: bold;
     cursor: pointer;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    box-shadow: 0 3px 6px rgba(0,0,0,0.2);
     transition: all 0.2s ease;
     display: flex;
     align-items: center;
     justify-content: center;
     touch-action: manipulation;
+    margin-top: 8px;
 }
 
 .reset-btn:hover, .reset-btn:active {
     background: #ff5252;
-    transform: scale(1.05);
-    box-shadow: 0 3px 6px rgba(255, 107, 107, 0.4);
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 4px 8px rgba(255, 107, 107, 0.4);
 }
 
-/* 프로그래밍 슬롯 영역 - 모바일 최적화 */
+/* 프로그래밍 슬롯 영역 - 데스크톱 최적화 */
 .programming-area {
     width: 100%;
     margin: 0;
@@ -210,22 +212,22 @@ h1 {
 .programming-slots {
     display: flex;
     flex-wrap: wrap;
-    gap: 6px;
+    gap: 8px;
     justify-content: center;
     background: rgba(255,255,255,0.1);
-    padding: 12px;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-    max-width: 320px;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+    max-width: 420px;
     margin: 0 auto;
 }
 
 .slot {
-    width: 50px;
-    height: 50px;
+    width: 60px;
+    height: 60px;
     background: rgba(255,255,255,0.3);
     border: 2px dashed #ccc;
-    border-radius: 6px;
+    border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -237,7 +239,7 @@ h1 {
 .slot:hover, .slot:active {
     background: rgba(255,255,255,0.4);
     border-color: #4CAF50;
-    transform: scale(1.05);
+    transform: translateY(-2px) scale(1.05);
 }
 
 .slot.filled {
@@ -253,8 +255,8 @@ h1 {
 
 /* 슬롯 아이콘 스타일 */
 .slot-icon {
-    width: 30px;
-    height: 30px;
+    width: 36px;
+    height: 36px;
     object-fit: contain;
     pointer-events: none;
 }
@@ -281,10 +283,10 @@ h1 {
 /* 컨트롤 및 UI 스타일 */
 .controls {
     text-align: center;
-    margin: 15px 0;
+    margin: 20px 0;
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 10px;
     justify-content: center;
 }
 
@@ -292,19 +294,19 @@ h1 {
     background: #4CAF50;
     color: white;
     border: none;
-    padding: 10px 20px;
-    font-size: 14px;
-    border-radius: 20px;
+    padding: 12px 24px;
+    font-size: 16px;
+    border-radius: 25px;
     cursor: pointer;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     transition: all 0.2s ease;
     touch-action: manipulation;
-    min-width: 80px;
+    min-width: 100px;
 }
 
 .btn:hover, .btn:active {
     background: #45a049;
-    transform: scale(1.05);
+    transform: translateY(-2px) scale(1.05);
 }
 
 .btn:disabled {
@@ -315,14 +317,14 @@ h1 {
 
 .status {
     text-align: center;
-    margin: 10px;
-    font-size: 1em;
-    padding: 8px;
+    margin: 15px;
+    font-size: 1.1em;
+    padding: 12px;
     background: rgba(255,255,255,0.1);
-    border-radius: 8px;
-    line-height: 1.3;
-    max-width: 320px;
-    margin: 10px auto;
+    border-radius: 10px;
+    line-height: 1.4;
+    max-width: 420px;
+    margin: 15px auto;
 }
 
 /* 게임 오버 스타일 */
@@ -373,7 +375,98 @@ h1 {
     }
 }
 
-/* 가로 모드 최적화 (모바일/태블릿) */
+/* 모바일 세로 모드 전용 스타일 */
+@media (orientation: portrait) and (max-width: 768px) {
+    /* 세로 모드에서는 세로 배치로 변경 */
+    .game-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+    }
+    
+    /* 격자 크기 세로 모드 조정 */
+    .grid {
+        grid-template-columns: repeat(5, 60px);
+        grid-template-rows: repeat(5, 60px);
+        gap: 2px;
+        padding: 10px;
+    }
+    
+    .robot {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .robot img {
+        width: 45px;
+        height: 45px;
+    }
+    
+    .store img {
+        width: 40px;
+        height: 40px;
+    }
+    
+    /* 카드 덱 세로 모드 조정 */
+    .card-deck {
+        flex-direction: row;
+        flex-wrap: wrap;
+        max-width: 320px;
+        padding: 15px;
+        gap: 8px;
+        max-height: none;
+        overflow-y: visible;
+    }
+    
+    .card {
+        width: 65px;
+        height: 65px;
+        font-size: 18px;
+    }
+    
+    .card-icon {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .reset-btn {
+        width: 65px;
+        height: 40px;
+        font-size: 12px;
+        margin-top: 0;
+    }
+    
+    /* 슬롯 영역 세로 모드 조정 */
+    .programming-slots {
+        max-width: 320px;
+        padding: 12px;
+        gap: 6px;
+    }
+    
+    .slot {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .slot-icon {
+        width: 30px;
+        height: 30px;
+    }
+    
+    /* 컨트롤 버튼 세로 모드 조정 */
+    .btn {
+        padding: 10px 20px;
+        font-size: 14px;
+        min-width: 80px;
+    }
+    
+    .status {
+        font-size: 1em;
+        padding: 8px;
+        max-width: 320px;
+        margin: 10px auto;
+    }
+}
 @media (orientation: landscape) and (max-height: 600px) {
     body {
         padding: 5px;
