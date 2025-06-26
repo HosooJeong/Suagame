@@ -1,0 +1,393 @@
+/* 🤖 로봇 프로그래밍 게임 - 메인 스타일 */
+
+body {
+    margin: 0;
+    padding: 20px;
+    font-family: 'Comic Sans MS', cursive;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    user-select: none;
+}
+
+h1 {
+    text-align: center;
+    font-size: 2.5em;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    display: none; /* 제목 숨기기 */
+}
+
+/* 게임 컨테이너 */
+.game-container {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.grid-container {
+    position: relative;
+}
+
+/* 격자 스타일 */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(5, 100px);
+    grid-template-rows: repeat(5, 100px);
+    gap: 3px;
+    background: #fff;
+    padding: 15px;
+    border-radius: 15px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    height: 530px; /* 고정 높이 설정 (100px * 5 + 3px * 4 + 15px * 2) */
+    position: relative; /* 애니메이션을 위한 상대 위치 설정 */
+}
+
+.cell {
+    background: #f0f8ff;
+    border: 3px solid #ccc;
+    border-radius: 8px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 로봇 스타일 - 스프라이트 방식 */
+.robot {
+    width: 80px;
+    height: 80px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    z-index: 15; /* 상점보다 높은 z-index로 설정 */
+}
+
+.robot img {
+    width: 75px;
+    height: 75px;
+    object-fit: contain;
+    transition: transform 0.9s ease;
+    filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));
+}
+
+/* 상점 스타일 */
+.store {
+    position: absolute; /* 절대 위치로 변경 */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 5; /* 로봇보다 낮은 z-index */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none; /* 마우스 이벤트 방지 */
+}
+
+.store img {
+    width: 70px; /* 상점 크기 약간 증가 */
+    height: 70px;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+    filter: drop-shadow(1px 1px 3px rgba(0,0,0,0.3));
+}
+
+/* 로봇과 상점이 같은 셀에 있을 때의 스타일 */
+.cell:has(.robot):has(.store) {
+    background: #f0f8ff; /* 기본 배경색 유지 */
+    border-color: #ccc; /* 기본 테두리 색 유지 */
+}
+
+/* 상점만 있는 셀 스타일 */
+.cell:has(.store):not(:has(.robot)) {
+    background: #f9f9f9; /* 아주 연한 회색 배경 */
+}
+
+/* 방향에 따른 로봇 회전 - CSS에서 직접 제어 안함 */
+/* JavaScript에서 직접 transform 적용하도록 변경 */
+
+/* 카드 덱 스타일 */
+.card-deck {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    background: rgba(255,255,255,0.1);
+    padding: 20px;
+    border-radius: 15px;
+    min-width: 120px;
+    height: 530px; /* 격자와 높이 맞춤 */
+    justify-content: center; /* 카드들을 수직 가운데 정렬 */
+}
+
+.card {
+    width: 90px;
+    height: 90px;
+    background: #fff;
+    border: 3px solid #333;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    transition: all 0.2s ease;
+    color: black;
+    user-select: none;
+}
+
+/* 카드 아이콘 스타일 */
+.card-icon {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+    pointer-events: none;
+}
+
+.card:hover {
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+    border-color: #4CAF50;
+}
+
+.card:active {
+    transform: translateY(0) scale(0.98);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.go-card {
+    background: #fff9c4; /* 연한 노랑 배경 */
+    color: #4CAF50; /* 초록 글씨 */
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.go-card:hover {
+    background: #fff5a1; /* 더 진한 노랑 */
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 6px 12px rgba(255, 249, 196, 0.4);
+}
+
+/* 리셋 버튼 스타일 */
+.reset-btn {
+    width: 90px;
+    height: 45px;
+    background: #ff6b6b;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+    transition: all 0.2s ease;
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.reset-btn:hover {
+    background: #ff5252;
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 4px 8px rgba(255, 107, 107, 0.4);
+}
+
+.reset-btn:active {
+    transform: translateY(0) scale(0.98);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+/* 프로그래밍 슬롯 영역 */
+.programming-area {
+    max-width: 1200px;
+    margin: 30px auto 0 auto;
+    padding: 0 20px;
+}
+
+.programming-slots {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    background: rgba(255,255,255,0.1);
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+}
+
+.slot {
+    width: 70px;
+    height: 70px;
+    background: rgba(255,255,255,0.3);
+    border: 2px dashed #ccc;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.slot:hover {
+    background: rgba(255,255,255,0.4);
+    border-color: #4CAF50;
+    transform: translateY(-2px);
+}
+
+.slot.filled {
+    background: rgba(255,255,255,0.8);
+    border: 2px solid #4CAF50;
+}
+
+.slot.drop-target {
+    background: rgba(76, 175, 80, 0.2);
+    border-color: #4CAF50;
+    border-style: solid;
+}
+
+/* 슬롯 아이콘 스타일 */
+.slot-icon {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    pointer-events: none;
+}
+
+/* 실행 중인 슬롯 하이라이트 */
+.slot.executing {
+    background: rgba(255, 193, 7, 0.3);
+    border-color: #FFC107;
+    border-style: solid;
+    animation: pulse 0.8s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+/* 드래그 중인 카드 스타일 */
+.card.dragging {
+    opacity: 0.5;
+    transform: rotate(5deg);
+}
+
+
+
+/* 컨트롤 및 UI 스타일 */
+.controls {
+    text-align: center;
+    margin-top: 20px;
+    display: none; /* 버튼들 숨기기 */
+}
+
+.btn {
+    background: #4CAF50;
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    font-size: 18px;
+    border-radius: 25px;
+    cursor: pointer;
+    margin: 0 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    transition: background 0.3s;
+}
+
+.btn:hover {
+    background: #45a049;
+}
+
+.btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+.status {
+    text-align: center;
+    margin: 20px;
+    font-size: 1.2em;
+    padding: 10px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 10px;
+    display: none; /* 상태 메시지 숨기기 */
+}
+
+/* 게임 오버 스타일 */
+.game-over {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.game-over-content {
+    background: white;
+    color: black;
+    padding: 40px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+}
+
+.hidden {
+    display: none;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .game-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+    }
+    
+
+    
+    .card-deck {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 5px;
+    }
+    
+    .card {
+        width: 60px;
+        height: 60px;
+        font-size: 24px;
+    }
+    
+    .card-icon {
+        width: 30px;
+        height: 30px;
+    }
+    
+    /* 모바일 프로그래밍 슬롯 */
+    .programming-slots {
+        gap: 4px;
+        padding: 10px;
+        flex-wrap: wrap;
+    }
+    
+    .slot {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .slot-icon {
+        width: 25px;
+        height: 25px;
+    }
+}
