@@ -9,9 +9,13 @@ class UIController {
         this.robotController = robotController;
         this.elements = {};
         this.currentHighlight = -1;
+        this.sparkleInterval = null; // 반짝반짝 효과 인터벌
+        this.particlesContainer = null;
+        this.isOnStore = false; // 상점 위 상태 추적
         
         this.initializeElements();
         this.setupEventListeners();
+        this.initializeParticles();
     }
     
     /**
@@ -21,31 +25,176 @@ class UIController {
         this.elements = {
             grid: document.getElementById('grid'),
             cardDeck: document.getElementById('cardDeck'),
-            runBtn: document.getElementById('runBtn'),
-            resetBtn: document.getElementById('resetBtn'),
-            clearBtn: document.getElementById('clearBtn'),
-            status: document.getElementById('status'),
             gameOver: document.getElementById('gameOver'),
             quickResetBtn: document.getElementById('quickResetBtn')
         };
     }
     
     /**
+     * 파티클 시스템 초기화
+     */
+    initializeParticles() {
+        this.particlesContainer = document.getElementById('particlesContainer');
+        if (!this.particlesContainer) {
+            console.error('파티클 컨테이너를 찾을 수 없습니다!');
+        }
+    }
+    
+    /**
+     * 반짝반짝 효과 생성
+     */
+    createSparklesAtPosition(x, y, count = 6) {
+        if (!this.particlesContainer) return;
+        
+        const colors = ['gold', 'pink', 'blue', 'purple', 'green'];
+        const sizes = ['small', '', 'large'];
+        
+        for (let i = 0; i < count; i++) {
+            setTimeout(() => {
+                const sparkle = document.createElement('div');
+                sparkle.className = 'sparkle';
+                
+                // 랜덤 색상과 크기 적용
+                const randomColor = colors[Math.floor(Math.random() * colors.length)];
+                const randomSize = sizes[Math.floor(Math.random() * sizes.length)];
+                
+                sparkle.classList.add(randomColor);
+                if (randomSize) {
+                    sparkle.classList.add(randomSize);
+                }
+                
+                // 위치 주변에 랜덤하게 배치
+                const offsetX = (Math.random() - 0.5) * 40;
+                const offsetY = (Math.random() - 0.5) * 40;
+                
+                sparkle.style.left = (x + offsetX) + 'px';
+                sparkle.style.top = (y + offsetY) + 'px';
+                
+                // 랜덤 애니메이션 지연
+                sparkle.style.animationDelay = Math.random() * 0.3 + 's';
+                
+                this.particlesContainer.appendChild(sparkle);
+                
+                // 애니메이션 끝나면 제거
+                setTimeout(() => {
+                    if (sparkle.parentNode) {
+                        sparkle.parentNode.removeChild(sparkle);
+                    }
+                }, 1500);
+            }, i * 100); // 각 반짝이마다 약간의 시간차
+        }
+    }
+    
+    /**
+     * 로봇 위치에서 반짝반짝 효과 생성
+     */
+    createSparklesAtRobot() {
+        const robotElement = document.querySelector('.robot');
+        if (!robotElement) return;
+        
+        const robotRect = robotElement.getBoundingClientRect();
+        const centerX = robotRect.left + robotRect.width / 2;
+        const centerY = robotRect.top + robotRect.height / 2;
+        
+        this.createSparklesAtPosition(centerX, centerY, 4);
+    }
+    
+    /**
+     * 상점 위 로봇 감지 및 반짝반짝 효과 시작/중지
+     */
+    checkRobotOnStore() {
+        const robotX = this.gameState.robot.x;
+        const robotY = this.gameState.robot.y;
+        
+        // 로봇이 상점 위에 있는지 확인
+        const isOnStore = Object.values(this.gameState.stores).some(store => 
+            store.x === robotX && store.y === robotY
+        );
+        
+        // 상태 변화 감지
+        if (isOnStore && !this.isOnStore) {
+            // 상점에 처음 도착
+            this.startStoreSparkles();
+            this.addStoreCellEffect();
+            console.log('로봇이 상점에 도착! 반짝반짝 시작! ✨');
+        } else if (!isOnStore && this.isOnStore) {
+            // 상점에서 떠남
+            this.stopStoreSparkles();
+            this.removeStoreCellEffect();
+            console.log('로봇이 상점에서 떠남. 반짝반짝 중지.');
+        }
+        
+        this.isOnStore = isOnStore;
+    }
+    
+    /**
+     * 상점 반짝반짝 효과 시작
+     */
+    startStoreSparkles() {
+        if (this.sparkleInterval) {
+            clearInterval(this.sparkleInterval);
+        }
+        
+        // 즉시 한 번 실행
+        this.createSparklesAtRobot();
+        
+        // 800ms마다 반짝반짝 효과 반복
+        this.sparkleInterval = setInterval(() => {
+            if (this.isOnStore) {
+                this.createSparklesAtRobot();
+            }
+        }, 800);
+    }
+    
+    /**
+     * 상점 반짝반짝 효과 중지
+     */
+    stopStoreSparkles() {
+        if (this.sparkleInterval) {
+            clearInterval(this.sparkleInterval);
+            this.sparkleInterval = null;
+        }
+    }
+    
+    /**
+     * 상점 셀 강조 효과 추가
+     */
+    addStoreCellEffect() {
+        const robotX = this.gameState.robot.x;
+        const robotY = this.gameState.robot.y;
+        const cell = document.querySelector(`[data-x="${robotX}"][data-y="${robotY}"]`);
+        
+        if (cell) {
+            cell.classList.add('robot-on-store');
+        }
+    }
+    
+    /**
+     * 상점 셀 강조 효과 제거
+     */
+    removeStoreCellEffect() {
+        const cells = document.querySelectorAll('.cell.robot-on-store');
+        cells.forEach(cell => {
+            cell.classList.remove('robot-on-store');
+        });
+    }
+    /**
      * 이벤트 리스너 설정
      */
     setupEventListeners() {
         // 로봇 컨트롤러 이벤트
-        this.robotController.on('onMove', (data) => this.updateRobotPosition());
+        this.robotController.on('onMove', (data) => {
+            this.updateRobotPosition();
+            this.checkRobotOnStore(); // 상점 위 로봇 확인
+        });
         this.robotController.on('onRotate', (data) => this.updateRobotPosition());
         this.robotController.on('onGameOver', (data) => this.showGameOver(data));
-        this.robotController.on('onCommandExecute', (data) => this.highlightCommand(data));
         this.robotController.on('onBoundaryMove', (data) => this.handleBoundaryMove(data)); // 경계 넘어가는 이벤트
         
-        // 버튼 이벤트
-        this.elements.runBtn.addEventListener('click', () => this.runProgram());
-        this.elements.resetBtn.addEventListener('click', () => this.resetGame());
-        this.elements.clearBtn.addEventListener('click', () => this.clearCommands());
-        this.elements.quickResetBtn.addEventListener('click', () => this.resetGame());
+        // 리셋 버튼 이벤트
+        if (this.elements.quickResetBtn) {
+            this.elements.quickResetBtn.addEventListener('click', () => this.resetGame());
+        }
     }
     
     /**
@@ -56,7 +205,11 @@ class UIController {
         this.setupCardEvents();
         this.updateRobotPosition();
         this.updateStores(); // 상점 표시 초기화
-        this.updateStatus('카드를 클릭하거나 드래그해서 슬롯에 넣은 후 GO를 눌러주세요! 🎯');
+        
+        // 초기화 후 상점 확인
+        setTimeout(() => {
+            this.checkRobotOnStore();
+        }, 100);
     }
     
     /**
@@ -106,7 +259,7 @@ class UIController {
                 if (nextAvailableSlot) {
                     this.addCommandToSlot(nextAvailableSlot, command, card.outerHTML);
                 } else {
-                    this.updateStatus('슬롯이 가득 찼어요! 🚫');
+                    console.log('슬롯이 가득 찼어요! 🚫');
                 }
             });
         });
@@ -369,24 +522,23 @@ class UIController {
      */
     async executeCommand(command) {
         if (this.gameState.isRunning) {
-            this.updateStatus('로봇이 이미 움직이고 있어요!');
+            console.log('로봇이 이미 움직이고 있어요!');
             return;
         }
         
         try {
-            this.updateStatus(`${this.getCommandDisplayName(command)} 실행 중... 🤖`);
+            console.log(`${this.getCommandDisplayName(command)} 실행 중... 🤖`);
             
             // 명령 비동기 실행 (애니메이션 포함)
             const success = await this.robotController.executeCommandAsync(command);
             
             if (success) {
-                this.updateStatus(`${this.getCommandDisplayName(command)} 완료! 🎉`);
+                console.log(`${this.getCommandDisplayName(command)} 완료! 🎉`);
             } else {
-                this.updateStatus('명령 실행에 실패했어요!');
+                console.log('명령 실행에 실패했어요!');
             }
         } catch (error) {
             console.error('명령 실행 오류:', error);
-            this.updateStatus('명령 실행 중 오류가 발생했어요! 😵');
         }
     }
     
@@ -416,14 +568,21 @@ class UIController {
      * 게임 리셋
      */
     resetGame() {
+        // 반짝반짝 효과 중지
+        this.stopStoreSparkles();
+        this.removeStoreCellEffect();
+        this.isOnStore = false;
+        
         this.gameState.resetGame();
         this.updateRobotPosition();
         this.updateStores(); // 상점 위치도 업데이트
         this.clearAllSlots(); // 슬롯들도 모두 초기화
-        this.clearHighlight();
         this.elements.gameOver.classList.add('hidden');
-        this.elements.runBtn.disabled = false;
-        this.updateStatus('게임이 리셋되었어요! 카드를 슬롯에 넣고 GO를 눌러주세요! 🔄');
+        
+        // 리셋 후 상점 확인
+        setTimeout(() => {
+            this.checkRobotOnStore();
+        }, 100);
     }
     
     /**
@@ -459,8 +618,6 @@ class UIController {
         if (gameOverContent) {
             gameOverContent.textContent = reason;
         }
-        
-        this.updateStatus('게임 오버! 😵');
     }
     
     /**
@@ -529,19 +686,7 @@ class UIController {
         });
     }
     
-    /**
-     * 상태 메시지 업데이트
-     */
-    updateStatus(message) {
-        this.elements.status.textContent = message;
-        
-        // 잠시 강조 효과
-        this.elements.status.style.transform = 'scale(1.05)';
-        setTimeout(() => {
-            this.elements.status.style.transform = 'scale(1)';
-        }, 200);
-    }
-    
+
     /**
      * 게임 정보 표시 (디버그용)
      */
@@ -562,7 +707,7 @@ class UIController {
      */
     setAnimationSpeed(speed) {
         this.gameState.config.animationSpeed = Math.max(100, Math.min(2000, speed));
-        this.updateStatus(`애니메이션 속도: ${speed}ms`);
+        console.log(`애니메이션 속도: ${speed}ms`);
     }
     
     /**

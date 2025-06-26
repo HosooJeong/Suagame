@@ -345,55 +345,6 @@ h1 {
     transform: rotate(3deg) scale(0.9);
 }
 
-/* 컨트롤 및 UI 스타일 */
-.controls {
-    text-align: center;
-    margin: 20px 0;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    justify-content: center;
-}
-
-.btn {
-    background: #4CAF50;
-    color: white;
-    border: none;
-    padding: 12px 24px;
-    font-size: 16px;
-    border-radius: 25px;
-    cursor: pointer;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    transition: all 0.2s ease;
-    touch-action: manipulation;
-    min-width: 100px;
-}
-
-.btn:hover, .btn:active {
-    background: #45a049;
-    transform: translateY(-2px) scale(1.05);
-}
-
-.btn:disabled {
-    background: #ccc;
-    cursor: not-allowed;
-    transform: none;
-}
-
-.status {
-    text-align: center;
-    margin: 15px;
-    font-size: 1.1em;
-    padding: 12px;
-    background: rgba(255,255,255,0.4);
-    border-radius: 10px;
-    line-height: 1.4;
-    max-width: 420px;
-    margin: 15px auto;
-    color: #2c3e50;
-    border: 1px solid rgba(255,255,255,0.6);
-}
-
 /* 게임 오버 스타일 */
 .game-over {
     position: fixed;
@@ -430,6 +381,25 @@ h1 {
     font-size: 1.1em;
 }
 
+.game-over-content .btn {
+    background: #4CAF50;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    font-size: 16px;
+    border-radius: 25px;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    transition: all 0.2s ease;
+    touch-action: manipulation;
+    min-width: 100px;
+}
+
+.game-over-content .btn:hover, .game-over-content .btn:active {
+    background: #45a049;
+    transform: translateY(-2px) scale(1.05);
+}
+
 .hidden {
     display: none;
 }
@@ -439,6 +409,96 @@ h1 {
     .card:hover, .slot:hover, .btn:hover, .reset-btn:hover, .go-card:hover {
         transform: none;
         box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+    }
+}
+
+/* 파티클 컨테이너 */
+.particles-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 100;
+}
+
+/* 반짝반짝 효과 */
+.sparkle {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: linear-gradient(45deg, #FFD700, #FFF, #FFD700);
+    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+    animation: sparkleFloat 1.5s ease-out forwards;
+}
+
+.sparkle.small {
+    width: 6px;
+    height: 6px;
+}
+
+.sparkle.large {
+    width: 12px;
+    height: 12px;
+}
+
+@keyframes sparkleFloat {
+    0% {
+        transform: translateY(0) rotate(0deg) scale(0);
+        opacity: 1;
+    }
+    20% {
+        transform: translateY(-8px) rotate(72deg) scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-50px) rotate(360deg) scale(0);
+        opacity: 0;
+    }
+}
+
+/* 다양한 색상의 반짝이 */
+.sparkle.gold {
+    background: linear-gradient(45deg, #FFD700, #FFF8DC, #FFD700);
+}
+
+.sparkle.pink {
+    background: linear-gradient(45deg, #FF69B4, #FFB6C1, #FF69B4);
+}
+
+.sparkle.blue {
+    background: linear-gradient(45deg, #4ECDC4, #B0E0E6, #4ECDC4);
+}
+
+.sparkle.purple {
+    background: linear-gradient(45deg, #9370DB, #DDA0DD, #9370DB);
+}
+
+.sparkle.green {
+    background: linear-gradient(45deg, #98FB98, #90EE90, #98FB98);
+}
+
+/* 상점에 로봇이 있을 때 셀 강조 효과 */
+.cell.robot-on-store {
+    background: radial-gradient(circle, #FFD700 0%, #FFF8DC 50%, #E0FFFF 100%);
+    border-color: #FFD700;
+    animation: storeGlow 1s ease-in-out infinite alternate;
+    box-shadow: 
+        inset 0 2px 4px rgba(255,255,255,0.9),
+        0 0 20px rgba(255, 215, 0, 0.6);
+}
+
+@keyframes storeGlow {
+    0% {
+        box-shadow: 
+            inset 0 2px 4px rgba(255,255,255,0.9),
+            0 0 20px rgba(255, 215, 0, 0.4);
+    }
+    100% {
+        box-shadow: 
+            inset 0 2px 4px rgba(255,255,255,0.9),
+            0 0 30px rgba(255, 215, 0, 0.8);
     }
 }
 
