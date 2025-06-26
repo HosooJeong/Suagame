@@ -346,48 +346,5 @@ h1 {
     display: none;
 }
 
-/* 반응형 디자인 */
-@media (max-width: 768px) {
-    .game-container {
-        flex-direction: column;
-        align-items: center;
-        gap: 20px;
-    }
-    
-
-    
-    .card-deck {
-        flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 5px;
-    }
-    
-    .card {
-        width: 60px;
-        height: 60px;
-        font-size: 24px;
-    }
-    
-    .card-icon {
-        width: 30px;
-        height: 30px;
-    }
-    
-    /* 모바일 프로그래밍 슬롯 */
-    .programming-slots {
-        gap: 4px;
-        padding: 10px;
-        flex-wrap: wrap;
-    }
-    
-    .slot {
-        width: 50px;
-        height: 50px;
-    }
-    
-    .slot-icon {
-        width: 25px;
-        height: 25px;
-    }
-}
+/* 반응형 디자인 제거 - 데스크톱 고정 레이아웃만 사용 */
+/* 모바일 전용 스타일 제거됨 */
