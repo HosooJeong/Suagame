@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>유아 더하기 게임</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', cursive;
+            background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        /* 홈 버튼 스타일 */
+        .home-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
+            border: none;
+            border-radius: 25px;
+            padding: 10px 20px;
+            color: white;
+            font-family: inherit;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            z-index: 1000;
+            touch-action: manipulation;
+        }
+
+        .home-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+            background: linear-gradient(45deg, #FF5252, #26A69A);
+        }
+
+        .home-button:active {
+            transform: translateY(0px);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .home-icon {
+            font-size: 1.2em;
+        }
+
+        .home-text {
+            font-size: 0.9em;
+        }
+
+        /* 모바일 최적화 */
+        @media (max-width: 768px) {
+            .home-button {
+                top: 15px;
+                left: 15px;
+                padding: 12px 18px;
+                font-size: 1em;
+                min-width: 44px;
+                min-height: 44px;
+            }
+        }
+
+        /* 매우 작은 화면 (스마트폰) */
+        @media (max-width: 480px) {
+            .home-button {
+                top: 10px;
+                left: 10px;
+                padding: 14px 20px;
+                font-size: 1.1em;
+                min-width: 48px;
+                min-height: 48px;
+            }
+            
+            .home-button .home-text {
+                display: none; /* 작은 화면에서는 텍스트 숨기고 아이콘만 */
+            }
+            
+            .home-icon {
+                font-size: 1.4em;
+            }
+        }
+
+        /* 터치 디바이스 최적화 */
+        @media (hover: none) {
+            .home-button:hover {
+                transform: none;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            }
+        }
+
+        .home-text {
+            font-size: 0.9em;
+        }
+
+        .top-info {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            align-items: center;
+            margin-top: 70px; /* 홈 버튼과 겹치지 않도록 상단 여백 */
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .level-selector {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .level-btn {
+            background: rgba(255, 255, 255, 0.8);
+            color: #2d3436;
+            padding: 10px 18px;
+            border-radius: 25px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            border: 2px solid transparent;
+            touch-action: manipulation;
+        }
+
+        .level-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .level-btn.active {
+            background: rgba(106, 90, 205, 0.9);
+            color: white;
+            border: 2px solid #fff;
+            transform: scale(1.05);
+        }
+
+        .level-btn:active {
+            transform: scale(0.95);
+        }
+
+        .score-display {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #2d3436;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .question-area {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            flex: 1;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+        }
+
+        .number-card {
+            width: 20vw;
+            height: 20vw;
+            min-width: 100px;
+            min-height: 100px;
+            max-width: 150px;
+            max-height: 150px;
+            background: white;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10vw;
+            font-weight: bold;
+            color: #2d3436;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            border: 4px solid #00b894;
+        }
+
+        .operator {
+            font-size: 12vw;
+            color: #2d3436;
+            font-weight: bold;
+            min-font-size: 2em;
+        }
+
+        .question-mark {
+            background: #ddd6fe;
+            color: #7c3aed;
+        }
+
+        .answer-options {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 15px;
+            width: 100%;
+            max-width: 500px;
+            margin-bottom: 20px;
+        }
+
+        .answer-card {
+            aspect-ratio: 1;
+            background: white;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 8vw;
+            font-weight: bold;
+            color: #2d3436;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border: 3px solid transparent;
+            touch-action: manipulation;
+            min-height: 60px;
+        }
+
+        .answer-card:active {
+            transform: scale(0.95);
+        }
+
+        .correct-answer {
+            background: #00b894 !important;
+            color: white !important;
+            animation: bounce 0.6s;
+            transform: scale(1.1);
+        }
+
+        .wrong-answer {
+            background: #ff6b6b !important;
+            color: white !important;
+            animation: shake 0.5s;
+        }
+
+        .celebration {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 15vw;
+            animation: celebrate 1s;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .particle {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 60%, 100% { transform: scale(1.1) translateY(0); }
+            40% { transform: scale(1.1) translateY(-20px); }
+            80% { transform: scale(1.1) translateY(-10px); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
+            20%, 40%, 60%, 80% { transform: translateX(10px); }
+        }
+
+        @keyframes celebrate {
+            0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+            50% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
+        }
+
+        /* 세로 화면 (일반적인 핸드폰) */
+        @media (orientation: portrait) {
+            .number-card {
+                font-size: 12vw;
+                max-font-size: 5em;
+            }
+            
+            .operator {
+                font-size: 14vw;
+                max-font-size: 6em;
+            }
+            
+            .answer-card {
+                font-size: 10vw;
+                max-font-size: 3.5em;
+                min-height: 70px;
+            }
+            
+            .answer-options {
+                gap: 4vw;
+                margin-bottom: 6vh;
+            }
+            
+            .question-area {
+                margin-bottom: 50px;
+            }
+        }
+
+        /* 가로 화면 */
+        @media (orientation: landscape) {
+            body {
+                padding: 10px;
+            }
+            
+            .question-area {
+                gap: 15px;
+                margin-bottom: 30px;
+            }
+            
+            .number-card {
+                width: 18vh;
+                height: 18vh;
+                font-size: 10vh;
+                min-width: 120px;
+                min-height: 120px;
+            }
+            
+            .operator {
+                font-size: 12vh;
+                min-font-size: 3em;
+            }
+            
+            .answer-card {
+                font-size: 7vh;
+                min-height: 80px;
+            }
+            
+            .answer-options {
+                gap: 15px;
+                margin-bottom: 15px;
+            }
+            
+            .level-btn {
+                font-size: 1.0em;
+                padding: 8px 15px;
+            }
+            
+            .score-display {
+                font-size: 1.3em;
+                padding: 8px 20px;
+            }
+        }
+
+        /* 아주 작은 화면 */
+        @media (max-width: 360px) {
+            .question-area {
+                gap: 10px;
+            }
+            
+            .answer-options {
+                gap: 8px;
+            }
+            
+            .level-btn, .score-display {
+                font-size: 1.1em;
+                padding: 8px 15px;
+            }
+        }
+
+        /* 큰 화면에서는 최대 크기 제한 */
+        @media (min-width: 768px) {
+            .number-card {
+                width: 150px;
+                height: 150px;
+                font-size: 5em;
+            }
+            
+            .operator {
+                font-size: 6em;
+            }
+            
+            .answer-card {
+                font-size: 3em;
+            }
+        }
+
+        /* 모바일에서 홈 버튼 조정 */
+        @media (max-width: 480px) {
+            .home-button {
+                top: 15px;
+                left: 15px;
+                padding: 8px 15px;
+                font-size: 0.9em;
+                border-radius: 20px;
+            }
+            
+            .home-text {
+                display: none; /* 모바일에서는 아이콘만 표시 */
+            }
+            
+            .home-icon {
+                font-size: 1.4em;
+            }
+        }
+
+        /* 태블릿에서 홈 버튼 조정 */
+        @media (min-width: 481px) and (max-width: 768px) {
+            .home-button {
+                top: 20px;
+                left: 20px;
+                padding: 12px 24px;
+                font-size: 1.1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="home-button" onclick="goHome()">
+        <span class="home-icon">🏠</span>
+        <span class="home-text">홈으로</span>
+    </button>
+    
+    <div class="top-info">
+        <div class="level-selector">
+            <div class="level-btn active" data-level="1">1단계</div>
+            <div class="level-btn" data-level="2">2단계</div>
+            <div class="level-btn" data-level="3">3단계</div>
+        </div>
+        <div class="score-display">🌟 <span id="score">0</span></div>
+    </div>
+    
+    <div class="question-area">
+        <div class="number-card" id="num1">5</div>
+        <div class="operator">+</div>
+        <div class="number-card" id="num2">3</div>
+        <div class="operator">=</div>
+        <div class="number-card question-mark">?</div>
+    </div>
+
+    <div class="answer-options" id="options">
+        <!-- 답 선택지들이 여기에 동적으로 생성됩니다 -->
+    </div>
+    
+    <div id="feedback" style="text-align: center; font-size: 1.5em; color: #2d3436; margin-top: 10px;"></div>
+
+    <script>
+        let score = 0;
+        let currentLevel = 1;
+        let currentNum1, currentNum2, correctAnswer;
+        let wrongAttempts = 0;
+        let maxAttempts = 2;
+        
+        // 배경음악 설정
+        let backgroundMusic = new Audio('bgm.mp3');
+        backgroundMusic.loop = true;
+        backgroundMusic.volume = 0.3;
+        
+        // 효과음 생성 (Web Audio API 사용)
+        let audioContext = null;
+        
+        function initAudio() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+        
+        function playCorrectSound() {
+            if (!audioContext) initAudio();
+            
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.setValueAtTime(523.25, audioContext.currentTime);
+            oscillator.frequency.setValueAtTime(659.25, audioContext.currentTime + 0.1);
+            oscillator.frequency.setValueAtTime(783.99, audioContext.currentTime + 0.2);
+            
+            gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.3);
+        }
+        
+        function playWrongSound() {
+            if (!audioContext) initAudio();
+            
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+            oscillator.frequency.setValueAtTime(400, audioContext.currentTime + 0.1);
+            
+            gainNode.gain.setValueAtTime(0.15, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.2);
+        }
+        
+        function startBackgroundMusic() {
+            initAudio();
+            backgroundMusic.play().catch(error => {
+                console.log('배경음악 재생 실패:', error);
+            });
+        }
+        
+        document.addEventListener('click', function() {
+            startBackgroundMusic();
+        }, { once: true });
+
+        // 레벨 선택 기능
+        function setupLevelSelector() {
+            const levelBtns = document.querySelectorAll('.level-btn');
+            
+            levelBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const selectedLevel = parseInt(btn.dataset.level);
+                    
+                    if (selectedLevel !== currentLevel) {
+                        currentLevel = selectedLevel;
+                        
+                        levelBtns.forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+                        
+                        generateQuestion();
+                        playCorrectSound();
+                    }
+                });
+            });
+        }
+
+        function generateQuestionByLevel(level) {
+            let num1, num2;
+            
+            switch(level) {
+                case 1:
+                    do {
+                        num1 = Math.floor(Math.random() * 9) + 1;
+                        num2 = Math.floor(Math.random() * 9) + 1;
+                    } while (num1 + num2 > 10);
+                    break;
+                    
+                case 2:
+                    do {
+                        num1 = Math.floor(Math.random() * 9) + 1;
+                        num2 = Math.floor(Math.random() * 9) + 1;
+                    } while (num1 + num2 < 10);
+                    break;
+                    
+                case 3:
+                    if (Math.random() < 0.5) {
+                        num1 = Math.floor(Math.random() * 10) + 10;
+                        num2 = Math.floor(Math.random() * (21 - num1)) + 1;
+                    } else {
+                        num2 = Math.floor(Math.random() * 10) + 10;
+                        num1 = Math.floor(Math.random() * (21 - num2)) + 1;
+                    }
+                    break;
+                    
+                default:
+                    num1 = Math.floor(Math.random() * 5) + 1;
+                    num2 = Math.floor(Math.random() * 5) + 1;
+            }
+            
+            return {num1, num2};
+        }
+
+        function generateQuestion() {
+            const {num1, num2} = generateQuestionByLevel(currentLevel);
+            currentNum1 = num1;
+            currentNum2 = num2;
+            correctAnswer = currentNum1 + currentNum2;
+            wrongAttempts = 0;
+            
+            document.getElementById('num1').textContent = currentNum1;
+            document.getElementById('num2').textContent = currentNum2;
+            
+            generateOptions();
+        }
+
+        function generateOptions() {
+            const optionsContainer = document.getElementById('options');
+            optionsContainer.innerHTML = '';
+            
+            let options = [correctAnswer];
+            
+            while (options.length < 5) {
+                let wrongAnswer = correctAnswer + Math.floor(Math.random() * 11) - 5;
+                if (wrongAnswer > 0 && wrongAnswer <= 30 && !options.includes(wrongAnswer)) {
+                    options.push(wrongAnswer);
+                }
+            }
+            
+            options.sort(() => Math.random() - 0.5);
+            
+            options.forEach(option => {
+                const card = document.createElement('div');
+                card.className = 'answer-card';
+                card.textContent = option;
+                card.onclick = () => checkAnswer(option, card);
+                optionsContainer.appendChild(card);
+            });
+        }
+
+        function checkAnswer(selectedAnswer, cardElement) {
+            const allCards = document.querySelectorAll('.answer-card');
+            
+            if (selectedAnswer === correctAnswer) {
+                cardElement.classList.add('correct-answer');
+                score += 10;
+                
+                document.getElementById('score').textContent = score;
+                
+                playCorrectSound();
+                showCelebrationWithParticles('🎉');
+                
+                allCards.forEach(card => {
+                    card.style.pointerEvents = 'none';
+                });
+                
+                setTimeout(() => {
+                    resetCards();
+                    generateQuestion();
+                }, 1500);
+                
+            } else {
+                wrongAttempts++;
+                
+                cardElement.classList.add('wrong-answer');
+                cardElement.style.pointerEvents = 'none';
+                
+                playWrongSound();
+                
+                if (wrongAttempts >= maxAttempts) {
+                    allCards.forEach(card => {
+                        card.style.pointerEvents = 'none';
+                    });
+                    
+                    allCards.forEach(card => {
+                        if (parseInt(card.textContent) === correctAnswer) {
+                            card.classList.add('correct-answer');
+                            card.style.pointerEvents = 'auto';
+                            card.onclick = () => {
+                                playCorrectSound();
+                                showCelebrationWithParticles('😊');
+                                
+                                allCards.forEach(c => {
+                                    c.style.pointerEvents = 'none';
+                                });
+                                
+                                setTimeout(() => {
+                                    resetCards();
+                                    generateQuestion();
+                                }, 1500);
+                            };
+                        }
+                    });
+                    
+                    const feedbackEl = document.getElementById('feedback');
+                    feedbackEl.innerHTML = `정답은 ${correctAnswer}이었어요! 😊<br>정답을 클릭해보세요!`;
+                } else {
+                    const feedbackEl = document.getElementById('feedback');
+                    feedbackEl.innerHTML = `한번 더 해봐요! 😊`;
+                    
+                    setTimeout(() => {
+                        feedbackEl.innerHTML = '';
+                    }, 1000);
+                }
+            }
+        }
+
+        function showCelebration(emoji) {
+            const celebration = document.createElement('div');
+            celebration.className = 'celebration';
+            celebration.textContent = emoji;
+            document.body.appendChild(celebration);
+            
+            setTimeout(() => {
+                document.body.removeChild(celebration);
+            }, 1000);
+        }
+
+        function showCelebrationWithParticles(emoji) {
+            createParticles();
+            showCelebration(emoji);
+        }
+
+        function createParticles() {
+            const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#feca57', '#ff9ff3', '#54a0ff', '#5f27cd'];
+            const particleCount = 20;
+            
+            const centerX = window.innerWidth / 2;
+            const centerY = window.innerHeight / 2;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                particle.style.left = centerX + 'px';
+                particle.style.top = centerY + 'px';
+                
+                const size = Math.random() * 25 + 20;
+                particle.style.width = size + 'px';
+                particle.style.height = size + 'px';
+                
+                const baseAngle = (2 * Math.PI * i) / particleCount;
+                const randomOffset = (Math.random() - 0.5) * 0.3;
+                const angle = baseAngle + randomOffset;
+                
+                const velocity = Math.random() * 375 + 250;
+                const finalX = centerX + Math.cos(angle) * velocity;
+                const finalY = centerY + Math.sin(angle) * velocity;
+                
+                const animationName = `explode${i}`;
+                
+                const styleSheet = document.styleSheets[0];
+                const keyframes = `
+                    @keyframes ${animationName} {
+                        0% {
+                            transform: translate(-50%, -50%) scale(0.3);
+                            opacity: 1;
+                        }
+                        15% {
+                            transform: translate(-50%, -50%) scale(1.8);
+                            opacity: 1;
+                        }
+                        100% {
+                            transform: translate(${finalX - centerX}px, ${finalY - centerY}px) scale(0.5);
+                            opacity: 0;
+                        }
+                    }
+                `;
+                
+                styleSheet.insertRule(keyframes, styleSheet.cssRules.length);
+                
+                particle.style.animation = `${animationName} ${(Math.random() * 1 + 2)}s ease-out forwards`;
+                
+                document.body.appendChild(particle);
+                
+                setTimeout(() => {
+                    if (document.body.contains(particle)) {
+                        document.body.removeChild(particle);
+                    }
+                }, 3500);
+            }
+        }
+
+        function resetCards() {
+            const allCards = document.querySelectorAll('.answer-card');
+            allCards.forEach(card => {
+                card.classList.remove('correct-answer', 'wrong-answer');
+                card.style.pointerEvents = 'auto';
+            });
+            
+            const feedbackEl = document.getElementById('feedback');
+            if (feedbackEl) {
+                feedbackEl.innerHTML = '';
+            }
+        }
+
+        // 게임 시작
+        setupLevelSelector();
+        generateQuestion();
+
+        // 홈으로 이동하는 함수
+        function goHome() {
+            // 부드러운 페이지 전환 효과
+            document.body.style.transition = 'opacity 0.3s ease';
+            document.body.style.opacity = '0';
+            
+            setTimeout(() => {
+                window.location.href = '../../index.html';
+            }, 300);
+        }
+    </script>
+</body>
+</html>
