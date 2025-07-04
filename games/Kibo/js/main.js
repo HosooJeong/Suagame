@@ -415,3 +415,14 @@ function goHome() {
         window.location.href = '../../index.html';
     }, 300);
 }
+
+// 게임 재시작 함수
+function restartGame() {
+    console.log('🔄 게임 재시작');
+    
+    // 게임 리셋 (모달 숨김은 resetGame에서 처리)
+    if (window.robotGame && window.robotGame.uiController) {
+        window.robotGame.resetGame();
+    }
+}
+

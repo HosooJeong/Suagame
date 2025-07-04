@@ -13,13 +13,13 @@
         }
 
         body {
-            font-family: 'Comic Sans MS', cursive;
-            background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);
+            font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+            background: linear-gradient(135deg, #FFF3A0 0%, #FFF8DC 50%, #FFFACD 100%);
             height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: space-between;
+            justify-content: flex-start;
             padding: 20px;
             overflow: hidden;
         }
@@ -29,7 +29,7 @@
             position: fixed;
             top: 20px;
             left: 20px;
-            background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
+            background: #FF6B6B;
             border: none;
             border-radius: 25px;
             padding: 10px 20px;
@@ -42,15 +42,15 @@
             align-items: center;
             gap: 8px;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
             z-index: 1000;
             touch-action: manipulation;
         }
 
         .home-button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
-            background: linear-gradient(45deg, #FF5252, #26A69A);
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+            background: #FF5252;
         }
 
         .home-button:active {
@@ -115,11 +115,51 @@
             justify-content: center;
             width: 100%;
             align-items: center;
-            margin-top: 70px; /* 홈 버튼과 겹치지 않도록 상단 여백 */
+            margin-bottom: 30px;
             gap: 20px;
             flex-wrap: wrap;
         }
 
+        .operation-selector {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 70px;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+        
+        .operation-btn {
+            background: rgba(255, 255, 255, 0.7);
+            color: #2d3436;
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-size: 1.3em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            border: 2px solid transparent;
+            touch-action: manipulation;
+        }
+        
+        .operation-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .operation-btn.active {
+            background: rgba(255, 107, 107, 0.9);
+            color: white;
+            border: 2px solid #fff;
+            transform: scale(1.05);
+        }
+        
+        .operation-btn:active {
+            transform: scale(0.95);
+        }
+        
         .level-selector {
             display: flex;
             gap: 10px;
@@ -171,9 +211,8 @@
             align-items: center;
             justify-content: center;
             gap: 20px;
-            flex: 1;
             flex-wrap: wrap;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
         }
 
         .number-card {
@@ -208,12 +247,14 @@
         }
 
         .answer-options {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
+            display: flex;
+            justify-content: center;
+            align-items: center;
             gap: 15px;
             width: 100%;
-            max-width: 500px;
-            margin-bottom: 20px;
+            max-width: 600px;
+            margin: 0 auto 10px auto;
+            flex-wrap: wrap;
         }
 
         .answer-card {
@@ -223,7 +264,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 8vw;
+            font-size: 10.4vw;
             font-weight: bold;
             color: #2d3436;
             cursor: pointer;
@@ -231,7 +272,7 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             border: 3px solid transparent;
             touch-action: manipulation;
-            min-height: 60px;
+            min-height: 78px;
         }
 
         .answer-card:active {
@@ -302,14 +343,17 @@
             }
             
             .answer-card {
-                font-size: 10vw;
-                max-font-size: 3.5em;
-                min-height: 70px;
+                font-size: 13vw;
+                max-font-size: 4.55em;
+                min-height: 91px;
             }
             
             .answer-options {
                 gap: 4vw;
-                margin-bottom: 6vh;
+                margin: 0 auto 6vh auto;
+                justify-content: center;
+                align-items: center;
+                max-width: 95%;
             }
             
             .question-area {
@@ -317,48 +361,57 @@
             }
         }
 
-        /* 가로 화면 */
-        @media (orientation: landscape) {
+        /* 가로 화면 (일반) */
+        @media (orientation: landscape) and (max-width: 767px) {
             body {
                 padding: 10px;
+                justify-content: flex-start;
             }
             
-            .question-area {
-                gap: 15px;
-                margin-bottom: 30px;
-            }
-            
-            .number-card {
-                width: 18vh;
-                height: 18vh;
-                font-size: 10vh;
-                min-width: 120px;
-                min-height: 120px;
-            }
-            
-            .operator {
-                font-size: 12vh;
-                min-font-size: 3em;
-            }
-            
-            .answer-card {
-                font-size: 7vh;
-                min-height: 80px;
-            }
-            
-            .answer-options {
-                gap: 15px;
+            .top-info {
+                margin-top: 50px;
                 margin-bottom: 15px;
             }
             
+            .question-area {
+                gap: 12px;
+                margin-bottom: 15px;
+            }
+            
+            .number-card {
+                width: 15vh;
+                height: 15vh;
+                font-size: 8vh;
+                min-width: 80px;
+                min-height: 80px;
+            }
+            
+            .operator {
+                font-size: 10vh;
+                min-font-size: 2.5em;
+            }
+            
+            .answer-card {
+                font-size: 7.8vh;
+                min-height: 78px;
+            }
+            
+            .answer-options {
+                gap: 12px;
+                margin: 0 auto 10px auto;
+                justify-content: center;
+                align-items: center;
+                max-width: 90%;
+            }
+            
             .level-btn {
-                font-size: 1.0em;
-                padding: 8px 15px;
+                font-size: 0.9em;
+                padding: 6px 12px;
             }
             
             .score-display {
-                font-size: 1.3em;
-                padding: 8px 20px;
+                font-size: 1.2em;
+                padding: 6px 16px;
             }
         }
 
@@ -370,6 +423,9 @@
             
             .answer-options {
                 gap: 8px;
+                justify-content: center;
+                align-items: center;
+                margin: 0 auto;
             }
             
             .level-btn, .score-display {
@@ -391,7 +447,7 @@
             }
             
             .answer-card {
-                font-size: 3em;
+                font-size: 3.9em;
             }
         }
 
@@ -414,6 +470,107 @@
             }
         }
 
+        /* 태블릿 가로 모드 최적화 */
+        @media (orientation: landscape) and (min-width: 768px) and (max-width: 1200px) {
+            body {
+                padding: 15px 30px;
+                justify-content: flex-start;
+                gap: 0;
+            }
+            
+            .home-button {
+                top: 20px;
+                left: 20px;
+                padding: 10px 20px;
+                font-size: 1.0em;
+            }
+            
+            .top-info {
+                gap: 30px;
+                margin-top: 60px;
+                margin-bottom: 20px;
+            }
+            
+            .level-btn {
+                padding: 8px 16px;
+                font-size: 1.0em;
+                border-radius: 12px;
+                min-width: 80px;
+            }
+            
+            .score-display {
+                font-size: 1.4em;
+                padding: 8px 20px;
+                border-radius: 12px;
+                background: rgba(255,255,255,0.4);
+                backdrop-filter: blur(10px);
+            }
+            
+            .question-area {
+                gap: 15px;
+                margin: 20px 0;
+                justify-content: center;
+                max-width: 800px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            
+            .number-card {
+                width: 100px;
+                height: 100px;
+                font-size: 2.8em;
+                border-radius: 15px;
+                border: 3px solid rgba(255,255,255,0.6);
+                box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+            }
+            
+            .operator {
+                font-size: 3.2em;
+                padding: 15px;
+                border-radius: 12px;
+                background: rgba(255,255,255,0.3);
+                min-width: 60px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            
+            .answer-options {
+                gap: 18px;
+                margin: 20px auto;
+                justify-content: center;
+                align-items: center;
+                flex-wrap: wrap;
+                max-width: 700px;
+                display: flex;
+            }
+            
+            .answer-card {
+                width: 117px;
+                height: 117px;
+                font-size: 2.86em;
+                border-radius: 15px;
+                border: 3px solid rgba(255,255,255,0.6);
+                box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+                min-height: auto;
+            }
+            
+            .answer-card:hover {
+                transform: translateY(-3px) scale(1.03);
+                box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            }
+            
+            #feedback {
+                font-size: 1.8em;
+                margin-top: 15px;
+                padding: 10px 20px;
+                border-radius: 15px;
+                background: rgba(255,255,255,0.3);
+                backdrop-filter: blur(10px);
+                display: inline-block;
+            }
+        }
+
         /* 태블릿에서 홈 버튼 조정 */
         @media (min-width: 481px) and (max-width: 768px) {
             .home-button {
@@ -431,18 +588,25 @@
         <span class="home-text">홈으로</span>
     </button>
     
+    <div class="operation-selector">
+        <div class="operation-btn active" data-operation="add">+ 더하기</div>
+        <div class="operation-btn" data-operation="subtract">- 빼기</div>
+    </div>
+    
     <div class="top-info">
         <div class="level-selector">
             <div class="level-btn active" data-level="1">1단계</div>
             <div class="level-btn" data-level="2">2단계</div>
             <div class="level-btn" data-level="3">3단계</div>
+            <div class="level-btn" data-level="4">4단계</div>
+            <div class="level-btn" data-level="5">5단계</div>
         </div>
         <div class="score-display">🌟 <span id="score">0</span></div>
     </div>
     
     <div class="question-area">
         <div class="number-card" id="num1">5</div>
-        <div class="operator">+</div>
+        <div class="operator" id="operator">+</div>
         <div class="number-card" id="num2">3</div>
         <div class="operator">=</div>
         <div class="number-card question-mark">?</div>
@@ -457,6 +621,7 @@
     <script>
         let score = 0;
         let currentLevel = 1;
+        let currentOperation = 'add'; // 'add' or 'subtract'
         let currentNum1, currentNum2, correctAnswer;
         let wrongAttempts = 0;
         let maxAttempts = 2;
@@ -525,6 +690,30 @@
             startBackgroundMusic();
         }, { once: true });
 
+        // 연산 선택 기능
+        function setupOperationSelector() {
+            const operationBtns = document.querySelectorAll('.operation-btn');
+            
+            operationBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const selectedOperation = btn.dataset.operation;
+                    
+                    if (selectedOperation !== currentOperation) {
+                        currentOperation = selectedOperation;
+                        
+                        operationBtns.forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+                        
+                        // 연산자 표시 업데이트
+                        document.getElementById('operator').textContent = currentOperation === 'add' ? '+' : '-';
+                        
+                        generateQuestion();
+                        playCorrectSound();
+                    }
+                });
+            });
+        }
+        
         // 레벨 선택 기능
         function setupLevelSelector() {
             const levelBtns = document.querySelectorAll('.level-btn');
@@ -546,47 +735,123 @@
             });
         }
 
-        function generateQuestionByLevel(level) {
+        function generateQuestionByLevel(level, operation) {
             let num1, num2;
             
-            switch(level) {
-                case 1:
-                    do {
-                        num1 = Math.floor(Math.random() * 9) + 1;
-                        num2 = Math.floor(Math.random() * 9) + 1;
-                    } while (num1 + num2 > 10);
-                    break;
-                    
-                case 2:
-                    do {
-                        num1 = Math.floor(Math.random() * 9) + 1;
-                        num2 = Math.floor(Math.random() * 9) + 1;
-                    } while (num1 + num2 < 10);
-                    break;
-                    
-                case 3:
-                    if (Math.random() < 0.5) {
-                        num1 = Math.floor(Math.random() * 10) + 10;
-                        num2 = Math.floor(Math.random() * (21 - num1)) + 1;
-                    } else {
-                        num2 = Math.floor(Math.random() * 10) + 10;
-                        num1 = Math.floor(Math.random() * (21 - num2)) + 1;
-                    }
-                    break;
-                    
-                default:
-                    num1 = Math.floor(Math.random() * 5) + 1;
-                    num2 = Math.floor(Math.random() * 5) + 1;
+            if (operation === 'add') {
+                switch(level) {
+                    case 1:
+                        // 두 숫자 모두 5 이하
+                        num1 = Math.floor(Math.random() * 5) + 1;
+                        num2 = Math.floor(Math.random() * 5) + 1;
+                        break;
+                        
+                    case 2:
+                        // 두 숫자 더해서 10 이하
+                        do {
+                            num1 = Math.floor(Math.random() * 9) + 1;
+                            num2 = Math.floor(Math.random() * 9) + 1;
+                        } while (num1 + num2 > 10);
+                        break;
+                        
+                    case 3:
+                        // 한 숫자는 10 이하, 한 숫자는 5 이하
+                        if (Math.random() < 0.5) {
+                            num1 = Math.floor(Math.random() * 10) + 1;
+                            num2 = Math.floor(Math.random() * 5) + 1;
+                        } else {
+                            num1 = Math.floor(Math.random() * 5) + 1;
+                            num2 = Math.floor(Math.random() * 10) + 1;
+                        }
+                        break;
+                        
+                    case 4:
+                        // 두 숫자 모두 10 이하
+                        num1 = Math.floor(Math.random() * 10) + 1;
+                        num2 = Math.floor(Math.random() * 10) + 1;
+                        break;
+                        
+                    case 5:
+                        // 한 숫자는 20 이하, 한 숫자는 10 이하, 더해서 30 이하
+                        do {
+                            if (Math.random() < 0.5) {
+                                num1 = Math.floor(Math.random() * 20) + 1;
+                                num2 = Math.floor(Math.random() * 10) + 1;
+                            } else {
+                                num1 = Math.floor(Math.random() * 10) + 1;
+                                num2 = Math.floor(Math.random() * 20) + 1;
+                            }
+                        } while (num1 + num2 > 30);
+                        break;
+                        
+                    default:
+                        num1 = Math.floor(Math.random() * 5) + 1;
+                        num2 = Math.floor(Math.random() * 5) + 1;
+                }
+            } else { // subtract
+                switch(level) {
+                    case 1:
+                        // 5 이하 숫자에서 1~3 빼기
+                        num1 = Math.floor(Math.random() * 5) + 1;
+                        num2 = Math.floor(Math.random() * 3) + 1;
+                        if (num1 <= num2) {
+                            num1 = num2 + Math.floor(Math.random() * 3) + 1;
+                        }
+                        break;
+                        
+                    case 2:
+                        // 10 이하 숫자에서 1~5 빼기
+                        num1 = Math.floor(Math.random() * 10) + 1;
+                        num2 = Math.floor(Math.random() * 5) + 1;
+                        if (num1 <= num2) {
+                            num1 = num2 + Math.floor(Math.random() * 5) + 1;
+                        }
+                        break;
+                        
+                    case 3:
+                        // 10 이하 숫자에서 6~9 빼기
+                        num1 = Math.floor(Math.random() * 10) + 1;
+                        num2 = Math.floor(Math.random() * 4) + 6;
+                        if (num1 <= num2) {
+                            num1 = num2 + Math.floor(Math.random() * 3) + 1;
+                        }
+                        break;
+                        
+                    case 4:
+                        // 20 이하 숫자에서 1~10 빼기
+                        num1 = Math.floor(Math.random() * 20) + 1;
+                        num2 = Math.floor(Math.random() * 10) + 1;
+                        if (num1 <= num2) {
+                            num1 = num2 + Math.floor(Math.random() * 10) + 1;
+                        }
+                        break;
+                        
+                    case 5:
+                        // 30 이하 숫자에서 1~15 빼기
+                        num1 = Math.floor(Math.random() * 30) + 1;
+                        num2 = Math.floor(Math.random() * 15) + 1;
+                        if (num1 <= num2) {
+                            num1 = num2 + Math.floor(Math.random() * 15) + 1;
+                        }
+                        break;
+                        
+                    default:
+                        num1 = Math.floor(Math.random() * 5) + 1;
+                        num2 = Math.floor(Math.random() * 3) + 1;
+                        if (num1 <= num2) {
+                            num1 = num2 + Math.floor(Math.random() * 3) + 1;
+                        }
+                }
             }
             
             return {num1, num2};
         }
 
         function generateQuestion() {
-            const {num1, num2} = generateQuestionByLevel(currentLevel);
+            const {num1, num2} = generateQuestionByLevel(currentLevel, currentOperation);
             currentNum1 = num1;
             currentNum2 = num2;
-            correctAnswer = currentNum1 + currentNum2;
+            correctAnswer = currentOperation === 'add' ? currentNum1 + currentNum2 : currentNum1 - currentNum2;
             wrongAttempts = 0;
             
             document.getElementById('num1').textContent = currentNum1;
@@ -603,7 +868,7 @@
             
             while (options.length < 5) {
                 let wrongAnswer = correctAnswer + Math.floor(Math.random() * 11) - 5;
-                if (wrongAnswer > 0 && wrongAnswer <= 30 && !options.includes(wrongAnswer)) {
+                if (wrongAnswer > 0 && wrongAnswer <= 40 && !options.includes(wrongAnswer)) {
                     options.push(wrongAnswer);
                 }
             }
@@ -777,6 +1042,7 @@
         }
 
         // 게임 시작
+        setupOperationSelector();
         setupLevelSelector();
         generateQuestion();
 

@@ -7,8 +7,8 @@
 body {
     margin: 0;
     padding: 10px;
-    font-family: 'Comic Sans MS', cursive;
-    background: linear-gradient(135deg, #FFE5B4 0%, #FFCCCB 30%, #E6E6FA 60%, #B0E0E6 100%);
+    font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+    background: linear-gradient(135deg, #FFF3A0 0%, #FFF8DC 50%, #FFFACD 100%);
     color: #2c3e50;
     user-select: none;
     min-height: 100vh;
@@ -37,7 +37,7 @@ body {
     left: 0;
     top: 50%;
     transform: translateY(-50%);
-    background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
+    background: #FF6B6B;
     border: none;
     border-radius: 25px;
     padding: 8px 16px;
@@ -50,14 +50,14 @@ body {
     align-items: center;
     gap: 6px;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
     z-index: 1000;
 }
 
 .home-button:hover {
     transform: translateY(-50%) translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
-    background: linear-gradient(45deg, #FF5252, #26A69A);
+    box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+    background: #FF5252;
 }
 
 .home-button:active {
@@ -115,15 +115,28 @@ h1 {
     color: #2c3e50;
 }
 
-/* 게임 컨테이너 - 기본적으로 좌우 배치 (데스크톱과 가로모드 공통) */
-.game-container {
+/* 상단 영역: 격자 + 카드덱 */
+.top-section {
     display: flex;
-    flex-direction: row;
     justify-content: center;
     align-items: flex-start;
-    gap: 20px;
+    gap: 30px;
+    margin-bottom: 20px;
     max-width: 100%;
+}
+
+/* 하단 영역: 프로그래밍 슬롯 */
+.bottom-section {
+    width: 100%;
+    max-width: 800px;
     margin: 0 auto;
+}
+
+.card-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
 }
 
 .grid-container {
@@ -175,8 +188,8 @@ h1 {
 
 /* 로봇 스타일 - 아이들이 좋아할 바운시 효과 */
 .robot {
-    width: 60px;
-    height: 60px;
+    width: 70px;
+    height: 70px;
     position: relative;
     display: flex;
     align-items: center;
@@ -184,6 +197,7 @@ h1 {
     background: none;
     z-index: 15;
     animation: robotDance 2s ease-in-out infinite;
+    transition: all 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 @keyframes robotDance {
@@ -192,13 +206,83 @@ h1 {
     75% { transform: rotate(2deg) scale(1.05); }
 }
 
+/* 로봇 회전 애니메이션 */
+.robot.rotating {
+    animation: robotRotate 0.6s ease-in-out;
+}
+
+@keyframes robotRotate {
+    0% { transform: rotate(0deg); }
+    50% { transform: rotate(180deg) scale(1.1); }
+    100% { transform: rotate(360deg); }
+}
+
+/* 로봇 움직임 애니메이션 */
+.robot.moving {
+    animation: robotMove 1.2s ease-in-out;
+}
+
+@keyframes robotMove {
+    0% { transform: scale(1); }
+    25% { transform: scale(1.05) translateY(-2px); }
+    50% { transform: scale(1.1) translateY(-4px); }
+    75% { transform: scale(1.05) translateY(-2px); }
+    100% { transform: scale(1); }
+}
+
+/* 로봇 상점 도달 축하 애니메이션 */
+.robot.celebrating {
+    animation: robotCelebrate 2s ease-in-out;
+}
+
+@keyframes robotCelebrate {
+    0%, 100% { transform: scale(1) rotate(0deg); }
+    10% { transform: scale(1.2) rotate(15deg); }
+    20% { transform: scale(1.1) rotate(-15deg); }
+    30% { transform: scale(1.3) rotate(15deg); }
+    40% { transform: scale(1.1) rotate(-15deg); }
+    50% { transform: scale(1.4) rotate(0deg); }
+    60% { transform: scale(1.2) rotate(10deg); }
+    70% { transform: scale(1.1) rotate(-10deg); }
+    80% { transform: scale(1.2) rotate(5deg); }
+    90% { transform: scale(1.1) rotate(-5deg); }
+}
+
 .robot img {
-    width: 55px;
-    height: 55px;
+    width: 65px;
+    height: 65px;
     object-fit: contain;
-    transition: transform 0.9s ease;
+    transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.2));
     border-radius: 50%;
+}
+
+/* 발자국 효과 */
+.footprint {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: radial-gradient(circle, #4ECDC4 0%, transparent 70%);
+    border-radius: 50%;
+    opacity: 0.6;
+    animation: footprintFade 2s ease-out forwards;
+    pointer-events: none;
+    z-index: 5;
+}
+
+@keyframes footprintFade {
+    0% {
+        opacity: 0.6;
+        transform: scale(0.8);
+    }
+    50% {
+        opacity: 0.8;
+        transform: scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(1.2);
+    }
 }
 
 /* 상점 스타일 - 데스크톱 기본 크기 */
@@ -216,11 +300,12 @@ h1 {
 }
 
 .store img {
-    width: 50px;
-    height: 50px;
-    object-fit: contain;
+    width: 85px;
+    height: 85px;
+    object-fit: cover;
     transition: transform 0.3s ease;
     filter: drop-shadow(1px 1px 3px rgba(0,0,0,0.3));
+    border-radius: 8px;
 }
 
 /* 로봇과 상점이 같은 셀에 있을 때의 스타일 */
@@ -232,25 +317,26 @@ h1 {
 /* 상점만 있는 셀 스타일 */
 .cell:has(.store):not(:has(.robot)) {
     background: #f9f9f9;
+    animation: storeHighlight 2s ease-in-out infinite;
+}
+
+@keyframes storeHighlight {
+    0%, 100% { 
+        background: #f9f9f9;
+        box-shadow: 0 0 0 rgba(255, 215, 0, 0);
+    }
+    50% { 
+        background: #FFF8DC;
+        box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    }
 }
 
 /* 카드 덱 스타일 - 아이들이 좋아할 매직해 보이는 디자인 */
 .card-deck {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    background: linear-gradient(135deg, #FFB6C1 0%, #FFA07A 50%, #98FB98 100%);
-    padding: 20px;
-    border-radius: 20px;
-    min-width: 140px;
-    max-height: 400px;
-    overflow-y: auto;
-    justify-content: flex-start;
-    border: 4px solid #FFF;
-    box-shadow: 
-        0 8px 32px rgba(0,0,0,0.15),
-        inset 0 2px 4px rgba(255,255,255,0.8);
-    animation: cardDeckGlow 3s ease-in-out infinite alternate;
+    display: grid;
+    grid-template-columns: repeat(2, 120px);
+    grid-template-rows: repeat(3, 105px);
+    gap: 20px;
 }
 
 @keyframes cardDeckGlow {
@@ -259,19 +345,19 @@ h1 {
 }
 
 .card {
-    width: 75px;
-    height: 65px;
+    width: 120px;
+    height: 105px;
     background: linear-gradient(135deg, #FFF8DC 0%, #FFFACD 100%);
     border: 4px solid #FF69B4;
     border-radius: 15px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 22px;
+    font-size: 28px;
     font-weight: bold;
     cursor: pointer;
     box-shadow: 
-        0 6px 12px rgba(255,105,180,0.3),
+        0 8px 16px rgba(255,105,180,0.4),
         inset 0 2px 4px rgba(255,255,255,0.9);
     transition: all 0.3s ease;
     color: #8B4513;
@@ -287,10 +373,11 @@ h1 {
 
 /* 카드 아이콘 스타일 */
 .card-icon {
-    width: 40px;
-    height: 40px;
-    object-fit: contain;
+    width: 81px;
+    height: 81px;
+    object-fit: cover;
     pointer-events: none;
+    border-radius: 6px;
 }
 
 .card:hover, .card:active {
@@ -306,7 +393,7 @@ h1 {
     background: linear-gradient(135deg, #98FB98 0%, #90EE90 100%);
     color: #006400;
     font-weight: bold;
-    font-size: 20px;
+    font-size: 28px;
     cursor: pointer;
     border-color: #32CD32;
     animation: goCardPulse 1.5s ease-in-out infinite;
@@ -325,22 +412,22 @@ h1 {
 
 /* 리셋 버튼 스타일 */
 .reset-btn {
-    width: 75px;
-    height: 45px;
+    width: 120px;
+    height: 105px;
     background: #ff6b6b;
     color: white;
     border: none;
-    border-radius: 12px;
-    font-size: 13px;
+    border-radius: 15px;
+    font-size: 22px;
     font-weight: bold;
     cursor: pointer;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.2);
-    transition: all 0.2s ease;
+    box-shadow: 0 8px 16px rgba(255, 107, 107, 0.4);
+    transition: all 0.3s ease;
     display: flex;
     align-items: center;
     justify-content: center;
     touch-action: manipulation;
-    margin-top: 8px;
+    margin-top: 0;
 }
 
 .reset-btn:hover, .reset-btn:active {
@@ -353,59 +440,122 @@ h1 {
 .programming-area {
     width: 100%;
     margin: 0;
-    padding: 0 10px;
+    padding: 0;
+    position: relative;
+}
+
+.programming-title {
+    text-align: center;
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 10px;
+    background: rgba(255,255,255,0.8);
+    padding: 8px 16px;
+    border-radius: 15px;
+    display: inline-block;
+    margin-left: 50%;
+    transform: translateX(-50%);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 .programming-slots {
+    position: relative;
     display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
+    flex-wrap: nowrap;
+    gap: 12px;
     justify-content: center;
-    background: rgba(255,255,255,0.3);
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
-    max-width: 420px;
+    padding: 15px 20px;
+    min-height: 110px;
+    align-items: center;
+    width: 100%;
+    max-width: 900px;
     margin: 0 auto;
-    border: 1px solid rgba(255,255,255,0.5);
-    backdrop-filter: blur(10px);
+    overflow: visible;
+    background: transparent;
+    border-radius: 15px;
+    border: none;
+    box-shadow: none;
+}
+
+.slots-background-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.1em;
+    color: #95a5a6;
+    font-weight: bold;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.5;
+    text-shadow: 1px 1px 2px rgba(255,255,255,0.8);
+}
+
+.programming-arrows {
+    display: flex;
+    justify-content: center;
+    gap: 26px;
+    margin-top: 5px;
+    max-width: 380px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.arrow {
+    font-size: 1.5em;
+    color: #4ECDC4;
+    font-weight: bold;
+    animation: arrowPulse 2s ease-in-out infinite;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+}
+
+@keyframes arrowPulse {
+    0%, 100% { opacity: 0.6; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.1); }
 }
 
 .slot {
-    width: 60px;
-    height: 60px;
-    background: rgba(255,255,255,0.3);
-    border: 2px dashed #ccc;
-    border-radius: 8px;
+    width: 78px;
+    height: 78px;
+    background: rgba(255,255,255,0.95);
+    border: 2px solid #D1D5DB;
+    border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: all 0.3s ease;
     position: relative;
     touch-action: manipulation;
+    z-index: 2;
+    flex-shrink: 0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .slot:hover, .slot:active {
-    background: rgba(255,255,255,0.4);
+    background: rgba(255,255,255,0.9);
     border-color: #4CAF50;
     transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
 }
 
 .slot.filled {
-    background: rgba(255,255,255,0.8);
+    background: rgba(255,255,255,0.95);
     border: 2px solid #4CAF50;
+    box-shadow: 0 3px 6px rgba(76, 175, 80, 0.3);
 }
 
 .slot.drop-target {
     background: rgba(76, 175, 80, 0.2);
     border-color: #4CAF50;
     border-style: solid;
+    box-shadow: 0 3px 6px rgba(76, 175, 80, 0.4);
 }
 
 /* 슬롯 아이콘 스타일 */
 .slot-icon {
-    width: 36px;
-    height: 36px;
+    width: 46px;
+    height: 46px;
     object-fit: contain;
     pointer-events: none;
 }
@@ -485,7 +635,87 @@ h1 {
 }
 
 .hidden {
-    display: none;
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+}
+
+/* 성공/실패 모달 스타일 */
+.success-modal, .failure-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+}
+
+.modal-content {
+    background: white;
+    color: #2c3e50;
+    padding: 40px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    max-width: 400px;
+    width: 100%;
+    animation: modalPop 0.3s ease-out;
+}
+
+@keyframes modalPop {
+    0% {
+        transform: scale(0.7);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.modal-content h2 {
+    margin-top: 0;
+    font-size: 2.5em;
+    margin-bottom: 20px;
+}
+
+.success-modal .modal-content h2 {
+    color: #27AE60;
+}
+
+.failure-modal .modal-content h2 {
+    color: #E74C3C;
+}
+
+.modal-content p {
+    margin: 20px 0;
+    font-size: 1.2em;
+    line-height: 1.5;
+}
+
+.modal-content .btn {
+    background: #4CAF50;
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    font-size: 1.1em;
+    border-radius: 25px;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    transition: all 0.2s ease;
+    touch-action: manipulation;
+    margin-top: 10px;
+}
+
+.modal-content .btn:hover, .modal-content .btn:active {
+    background: #45a049;
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 6px 12px rgba(76, 175, 80, 0.3);
 }
 
 /* 터치 디바이스 최적화 */
@@ -494,6 +724,128 @@ h1 {
         transform: none;
         box-shadow: 0 3px 6px rgba(0,0,0,0.2);
     }
+}
+
+/* 게임 목표 안내 */
+.game-objective {
+    background: linear-gradient(135deg, #E8F5E8, #F0FFF0);
+    border: 3px solid #4CAF50;
+    border-radius: 15px;
+    padding: 12px 15px;
+    margin-bottom: 15px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+}
+
+.objective-text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #2E7D32;
+}
+
+.objective-icon {
+    font-size: 1.5em;
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-10px);
+    }
+    60% {
+        transform: translateY(-5px);
+    }
+}
+
+/* 프로그래밍 슬롯 영역 스타일 */
+.programming-title {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 10px;
+    text-align: center;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+    background: linear-gradient(135deg, #FFF8DC, #FFFACD);
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: 2px solid #FFD700;
+    box-shadow: 0 2px 8px rgba(255, 215, 0, 0.3);
+    display: inline-block;
+}
+
+.programming-help {
+    margin-top: 15px;
+    text-align: center;
+}
+
+.help-text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 0.9em;
+    color: #7f8c8d;
+    background: #F8F9FA;
+    padding: 8px 12px;
+    border-radius: 15px;
+    border: 2px solid #E9ECEF;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.help-icon {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.programming-arrows {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+}
+
+.arrow {
+    font-size: 1.5em;
+    color: #4ECDC4;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+    animation: pulseArrow 1.5s ease-in-out infinite;
+}
+
+@keyframes pulseArrow {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 0.7;
+    }
+    50% {
+        transform: scale(1.2);
+        opacity: 1;
+    }
+}
+
+
+
+.slots-background-text.hidden {
+    opacity: 0;
 }
 
 /* 파티클 컨테이너 */
@@ -593,6 +945,7 @@ h1 {
         flex-direction: column;
         align-items: center;
         gap: 15px;
+        padding: 0 10px;
     }
     
     /* 격자 크기 세로 모드 조정 */
@@ -614,8 +967,8 @@ h1 {
     }
     
     .store img {
-        width: 40px;
-        height: 40px;
+        width: 75px;
+        height: 75px;
     }
     
     /* 카드 덱 세로 모드 조정 */
@@ -630,33 +983,33 @@ h1 {
     }
     
     .card {
-        width: 65px;
-        height: 65px;
-        font-size: 18px;
+        width: 100px;
+        height: 83px;
+        font-size: 24px;
     }
     
     .card-icon {
-        width: 35px;
-        height: 35px;
+        width: 72px;
+        height: 72px;
     }
     
     .reset-btn {
-        width: 65px;
-        height: 40px;
-        font-size: 12px;
+        width: 100px;
+        height: 83px;
+        font-size: 20px;
         margin-top: 0;
     }
     
     /* 슬롯 영역 세로 모드 조정 */
     .programming-slots {
-        max-width: 320px;
-        padding: 12px;
-        gap: 6px;
+        max-width: 900px;
+        padding: 15px;
+        gap: 12px;
     }
     
     .slot {
-        width: 50px;
-        height: 50px;
+        width: 78px;
+        height: 78px;
     }
     
     .slot-icon {
@@ -681,6 +1034,7 @@ h1 {
 @media (orientation: landscape) and (max-height: 600px) {
     body {
         padding: 5px;
+        min-height: auto;
     }
     
     h1 {
@@ -691,10 +1045,22 @@ h1 {
     /* 가로 모드에서는 좌우 배치로 변경 */
     .game-container {
         flex-direction: row;
-        justify-content: center;
+        justify-content: space-between;
         align-items: flex-start;
-        gap: 10px;
+        gap: 15px;
         max-width: 100vw;
+        padding: 0 10px;
+    }
+    
+    /* 그리드와 카드덱을 위한 플렉서블 컨테이너 */
+    .grid-container {
+        flex: 0 0 auto;
+        order: 1;
+    }
+    
+    .card-deck {
+        flex: 0 0 auto;
+        order: 2;
     }
     
     /* 격자 크기 가로 모드 조정 */
@@ -716,8 +1082,8 @@ h1 {
     }
     
     .store img {
-        width: 32px;
-        height: 32px;
+        width: 70px;
+        height: 70px;
     }
     
     /* 카드 덱 가로 모드 조정 */
@@ -732,36 +1098,46 @@ h1 {
     }
     
     .card {
-        width: 55px;
-        height: 45px;
-        font-size: 16px;
+        width: 83px;
+        height: 67px;
+        font-size: 22px;
     }
     
     .card-icon {
-        width: 28px;
-        height: 28px;
+        width: 64px;
+        height: 64px;
     }
     
     .reset-btn {
-        width: 55px;
-        height: 35px;
-        font-size: 10px;
+        width: 83px;
+        height: 67px;
+        font-size: 18px;
     }
     
     /* 슬롯 영역 가로 모드 조정 */
     .programming-area {
         padding: 0 5px;
+        position: fixed;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: calc(100% - 20px);
+        max-width: 600px;
+        z-index: 50;
     }
     
     .programming-slots {
-        max-width: 280px;
-        padding: 8px;
-        gap: 4px;
+        max-width: 900px;
+        padding: 15px;
+        gap: 12px;
+        background: transparent;
+        backdrop-filter: none;
+        border: none;
     }
     
     .slot {
-        width: 40px;
-        height: 40px;
+        width: 78px;
+        height: 78px;
     }
     
     .slot-icon {
@@ -789,13 +1165,120 @@ h1 {
     }
 }
 
-/* 가로 모드에서 더 큰 화면 (태블릿) */
-@media (orientation: landscape) and (min-width: 768px) and (max-height: 600px) {
-    .grid {
-        grid-template-columns: repeat(5, 60px);
-        grid-template-rows: repeat(5, 60px);
-        padding: 10px;
+/* 태블릿 가로 모드 최적화 */
+@media (orientation: landscape) and (min-width: 768px) and (max-width: 1200px) {
+    body {
+        padding: 20px 40px;
     }
+    
+    h1 {
+        font-size: 2.2em;
+        margin: 5px 0 15px 0;
+    }
+    
+    .header-container {
+        margin-bottom: 20px;
+    }
+    
+    .home-button {
+        padding: 12px 25px;
+        font-size: 1.1em;
+    }
+    
+    .game-container {
+        flex-direction: row;
+        justify-content: center;
+        align-items: flex-start;
+        gap: 30px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    
+    .grid-container {
+        flex: 0 0 auto;
+        order: 1;
+    }
+    
+    .grid {
+        grid-template-columns: repeat(5, 80px);
+        grid-template-rows: repeat(5, 80px);
+        gap: 6px;
+        padding: 20px;
+        border: 4px solid #FFF;
+    }
+    
+    .robot {
+        width: 70px;
+        height: 70px;
+    }
+    
+    .robot img {
+        width: 65px;
+        height: 65px;
+    }
+    
+    .store img {
+        width: 90px;
+        height: 90px;
+    }
+    
+    .card-deck {
+        flex: 0 0 auto;
+        order: 2;
+        max-width: 180px;
+        padding: 25px;
+        gap: 15px;
+        max-height: 500px;
+        min-width: 180px;
+    }
+    
+    .card {
+        width: 107px;
+        height: 90px;
+        font-size: 28px;
+    }
+    
+    .card-icon {
+        width: 75px;
+        height: 75px;
+    }
+    
+    .reset-btn {
+        width: 107px;
+        height: 90px;
+        font-size: 22px;
+        margin-top: 10px;
+    }
+    
+    .programming-area {
+        position: static;
+        transform: none;
+        width: 100%;
+        max-width: 1200px;
+        padding: 0 20px;
+        margin-top: 25px;
+    }
+    
+    .programming-slots {
+        background: transparent;
+        backdrop-filter: none;
+        border: none;
+        padding: 15px;
+        gap: 12px;
+        border-radius: 15px;
+        max-width: 900px;
+    }
+    
+    .slot {
+        width: 78px;
+        height: 78px;
+    }
+    
+    .slot-icon {
+        width: 42px;
+        height: 42px;
+    }
+}
     
     .robot {
         width: 50px;
@@ -808,8 +1291,8 @@ h1 {
     }
     
     .store img {
-        width: 40px;
-        height: 40px;
+        width: 75px;
+        height: 75px;
     }
     
     .card-deck {
@@ -818,31 +1301,31 @@ h1 {
     }
     
     .card {
-        width: 65px;
-        height: 55px;
-        font-size: 18px;
+        width: 93px;
+        height: 80px;
+        font-size: 26px;
     }
     
     .card-icon {
-        width: 32px;
-        height: 32px;
+        width: 68px;
+        height: 68px;
     }
     
     .reset-btn {
-        width: 65px;
-        height: 40px;
-        font-size: 12px;
+        width: 93px;
+        height: 80px;
+        font-size: 20px;
     }
     
     .programming-slots {
-        max-width: 350px;
-        padding: 10px;
-        gap: 6px;
+        max-width: 900px;
+        padding: 15px;
+        gap: 12px;
     }
     
     .slot {
-        width: 50px;
-        height: 50px;
+        width: 78px;
+        height: 78px;
     }
     
     .slot-icon {
@@ -875,18 +1358,19 @@ h1 {
     }
     
     .card {
-        width: 60px;
-        height: 60px;
+        width: 87px;
+        height: 73px;
+        font-size: 25px;
     }
     
     .card-icon {
-        width: 32px;
-        height: 32px;
+        width: 68px;
+        height: 68px;
     }
     
     .slot {
-        width: 45px;
-        height: 45px;
+        width: 78px;
+        height: 78px;
     }
     
     .slot-icon {
@@ -911,5 +1395,101 @@ h1 {
     
     .header-container {
         margin-bottom: 10px;
+    }
+}
+
+/* 모바일 가로 모드 전용 - 작은 화면에서 더 나은 최적화 */
+@media (orientation: landscape) and (max-width: 767px) and (max-height: 500px) {
+    body {
+        padding: 2px;
+        overflow: hidden;
+    }
+    
+    h1 {
+        font-size: 1.2em;
+        margin: 0 0 5px 0;
+    }
+    
+    .header-container {
+        margin-bottom: 5px;
+    }
+    
+    .game-container {
+        gap: 8px;
+        justify-content: space-around;
+        height: calc(100vh - 150px);
+        overflow: visible;
+    }
+    
+    .grid {
+        grid-template-columns: repeat(5, 45px);
+        grid-template-rows: repeat(5, 45px);
+        gap: 1px;
+        padding: 6px;
+    }
+    
+    .robot {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .robot img {
+        width: 32px;
+        height: 32px;
+    }
+    
+    .store img {
+        width: 65px;
+        height: 65px;
+    }
+    
+    .card-deck {
+        max-width: 100px;
+        padding: 6px;
+        gap: 4px;
+        max-height: 200px;
+        overflow-y: auto;
+    }
+    
+    .card {
+        width: 73px;
+        height: 60px;
+        font-size: 20px;
+    }
+    
+    .card-icon {
+        width: 22px;
+        height: 22px;
+    }
+    
+    .reset-btn {
+        width: 73px;
+        height: 60px;
+        font-size: 16px;
+    }
+    
+    .programming-area {
+        bottom: 5px;
+        max-width: 400px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    
+    .programming-slots {
+        padding: 15px;
+        gap: 12px;
+        max-width: 900px;
+        overflow-x: auto;
+    }
+    
+    .slot {
+        width: 78px;
+        height: 78px;
+        flex-shrink: 0;
+    }
+    
+    .slot-icon {
+        width: 20px;
+        height: 20px;
     }
 }

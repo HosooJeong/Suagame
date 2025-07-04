@@ -17,44 +17,65 @@
         <h1>🤖 로봇 프로그래밍 게임 v2.0</h1>
     </div>
     
-    <div class="game-container">
+    <!-- 상단 영역: 격자 + 카드덱 -->
+    <div class="top-section">
         <div class="grid-container">
             <div class="grid" id="grid"></div>
         </div>
         
-        <div class="card-deck" id="cardDeck">
-            <div class="card" draggable="true" data-command="forward">
-                <img src="img/up-arrow.png" alt="앞으로" class="card-icon">
+        <div class="card-section">
+            <div class="card-deck" id="cardDeck">
+                <div class="card" draggable="true" data-command="forward">
+                    <img src="img/up-arrow.png" alt="앞으로" class="card-icon">
+                </div>
+                <div class="card" draggable="true" data-command="backward">
+                    <img src="img/down-arrow.png" alt="뒤로" class="card-icon">
+                </div>
+                <div class="card" draggable="true" data-command="right">
+                    <img src="img/clock-rotate.png" alt="우회전" class="card-icon">
+                </div>
+                <div class="card" draggable="true" data-command="left">
+                    <img src="img/anticlock-rotate.png" alt="좌회전" class="card-icon">
+                </div>
+                <div class="card go-card">GO</div>
+                
+                <!-- 리셋 버튼 추가 -->
+                <button class="reset-btn" id="quickResetBtn" title="게임 리셋">🔄 다시</button>
             </div>
-            <div class="card" draggable="true" data-command="backward">
-                <img src="img/down-arrow.png" alt="뒤로" class="card-icon">
-            </div>
-            <div class="card" draggable="true" data-command="right">
-                <img src="img/clock-rotate.png" alt="우회전" class="card-icon">
-            </div>
-            <div class="card" draggable="true" data-command="left">
-                <img src="img/anticlock-rotate.png" alt="좌회전" class="card-icon">
-            </div>
-            <div class="card go-card">GO</div>
-            
-            <!-- 리셋 버튼 추가 -->
-            <button class="reset-btn" id="quickResetBtn" title="게임 리셋">🔄 다시</button>
         </div>
     </div>
     
-    <!-- 프로그래밍 슬롯 영역 -->
-    <div class="programming-area">
+    <!-- 하단 영역: 프로그래밍 슬롯 -->
+    <div class="bottom-section">
+        <div class="programming-area">
         <div class="programming-slots" id="programmingSlots">
-            <div class="slot" data-slot="0"></div>
-            <div class="slot" data-slot="1"></div>
-            <div class="slot" data-slot="2"></div>
-            <div class="slot" data-slot="3"></div>
-            <div class="slot" data-slot="4"></div>
-            <div class="slot" data-slot="5"></div>
-            <div class="slot" data-slot="6"></div>
-            <div class="slot" data-slot="7"></div>
-            <div class="slot" data-slot="8"></div>
-            <div class="slot" data-slot="9"></div>
+            <div class="slot" data-slot="0">
+            </div>
+            <div class="slot" data-slot="1">
+            </div>
+            <div class="slot" data-slot="2">
+            </div>
+            <div class="slot" data-slot="3">
+            </div>
+            <div class="slot" data-slot="4">
+            </div>
+            <div class="slot" data-slot="5">
+            </div>
+            <div class="slot" data-slot="6">
+            </div>
+            <div class="slot" data-slot="7">
+            </div>
+            <div class="slot" data-slot="8">
+            </div>
+            <div class="slot" data-slot="9">
+            </div>
+        </div>
+        <div class="programming-help">
+            <div class="help-text">
+                <span class="help-icon">💡</span>
+                <span>카드를 순서대로 놓고 GO 버튼을 눌러주세요!</span>
+            </div>
+        </div>
         </div>
     </div>
     
@@ -66,6 +87,24 @@
             <h2>게임 오버! 💀</h2>
             <p>로봇이 맵 밖으로 나갔어요!</p>
             <button class="btn">다시 시작</button>
+        </div>
+    </div>
+
+    <!-- 성공 모달 -->
+    <div class="success-modal hidden" id="successModal" style="display: none;">
+        <div class="modal-content">
+            <h2>🎉 성공!</h2>
+            <p>로봇이 상점에 도착했어요!</p>
+            <button class="btn" onclick="restartGame()">다시 하기</button>
+        </div>
+    </div>
+
+    <!-- 실패 모달 -->
+    <div class="failure-modal hidden" id="failureModal" style="display: none;">
+        <div class="modal-content">
+            <h2>😅 아쉬워요!</h2>
+            <p>로봇이 상점에 도착하지 못했어요.<br>다시 도전해보세요!</p>
+            <button class="btn" onclick="restartGame()">다시 하기</button>
         </div>
     </div>
 

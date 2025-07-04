@@ -12,6 +12,7 @@ class UIController {
         this.sparkleInterval = null; // 반짝반짝 효과 인터벌
         this.particlesContainer = null;
         this.isOnStore = false; // 상점 위 상태 추적
+        this.programExecuted = false; // 프로그램 실행 여부 추적
         
         this.initializeElements();
         this.setupEventListeners();
@@ -415,11 +416,17 @@ class UIController {
         const deltaX = targetRect.left - currentRect.left;
         const deltaY = targetRect.top - currentRect.top;
         
+        // 발자국 효과 생성
+        this.createFootprint(currentCell);
+        
         // 스마트 회전: 방향 전환시 90도씩만 회전하도록 제어
         this.updateRobotDirection(robotElement);
         
         // 이동이 있는 경우에만 애니메이션
         if (deltaX !== 0 || deltaY !== 0) {
+            // 로봇 움직임 애니메이션 클래스 추가
+            robotElement.classList.add('moving');
+            
             // 로봇을 grid 컨테이너에 절대 위치로 이동 (애니메이션 위해)
             const gridContainer = document.querySelector('.grid');
             const gridRect = gridContainer.getBoundingClientRect();
@@ -438,7 +445,7 @@ class UIController {
             robotElement.offsetHeight;
             
             // 애니메이션으로 새 위치로 이동
-            robotElement.style.transition = 'left 0.9s ease, top 0.9s ease';
+            robotElement.style.transition = 'left 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94), top 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
             robotElement.style.left = (targetRect.left - gridRect.left) + 'px';
             robotElement.style.top = (targetRect.top - gridRect.top) + 'px';
             
@@ -451,11 +458,16 @@ class UIController {
                     robotElement.style.top = '';
                     robotElement.style.zIndex = '';
                     robotElement.style.transition = '';
+                    robotElement.classList.remove('moving');
                     
                     // 타겟 셀에 로봇 추가
                     targetCell.appendChild(robotElement);
+                    
+                    // 상점 도달 체크
+                    this.checkStoreArrival(targetCell, robotElement);
+                    
                     resolve();
-                }, 900); // 애니메이션 시간과 맞춤
+                }, 1200); // 애니메이션 시간과 맞춤
             });
         }
     }
@@ -487,8 +499,52 @@ class UIController {
             }
         });
     }
+    /**
+     * 발자국 효과 생성
+     */
+    createFootprint(cell) {
+        const footprint = document.createElement('div');
+        footprint.className = 'footprint';
+        
+        // 셀 중앙에 위치
+        footprint.style.left = '50%';
+        footprint.style.top = '50%';
+        footprint.style.transform = 'translate(-50%, -50%)';
+        
+        cell.appendChild(footprint);
+        
+        // 애니메이션 완료 후 제거
+        setTimeout(() => {
+            if (footprint.parentNode) {
+                footprint.parentNode.removeChild(footprint);
+            }
+        }, 2000);
+    }
+    
+    /**
+     * 상점 도달 체크 및 축하 애니메이션
+     */
+    checkStoreArrival(targetCell, robotElement) {
+        const storeElement = targetCell.querySelector('.store');
+        if (storeElement) {
+            // 축하 애니메이션 실행
+            robotElement.classList.add('celebrating');
+            
+            // 상점 위치에서 반짝이 효과
+            this.createSparklesAtRobot();
+            
+            // 축하 애니메이션 완료 후 클래스 제거
+            setTimeout(() => {
+                robotElement.classList.remove('celebrating');
+            }, 2000);
+        }
+    }
+    
     updateRobotDirection(robotElement) {
         const img = robotElement.querySelector('img');
+        
+        // 회전 애니메이션 클래스 추가
+        robotElement.classList.add('rotating');
         
         // 현재 저장된 각도 가져오기 (없으면 0)
         let currentAngle = parseInt(robotElement.dataset.currentAngle || '0');
@@ -496,6 +552,11 @@ class UIController {
         
         // 각도 차이 계산
         let angleDiff = targetAngle - currentAngle;
+        
+        // 회전 애니메이션 완료 후 클래스 제거
+        setTimeout(() => {
+            robotElement.classList.remove('rotating');
+        }, 600);
         
         // 가장 짧은 경로로 회전 (-180 ~ 180 범위)
         if (angleDiff > 180) {
@@ -572,12 +633,17 @@ class UIController {
         this.stopStoreSparkles();
         this.removeStoreCellEffect();
         this.isOnStore = false;
+        this.programExecuted = false; // 프로그램 실행 플래그 리셋
         
         this.gameState.resetGame();
         this.updateRobotPosition();
         this.updateStores(); // 상점 위치도 업데이트
         this.clearAllSlots(); // 슬롯들도 모두 초기화
         this.elements.gameOver.classList.add('hidden');
+        
+        
+        // 모든 모달 숨기기
+        this.hideAllModals();
         
         // 리셋 후 상점 확인
         setTimeout(() => {
@@ -734,6 +800,7 @@ class UIController {
         slot.classList.add('filled');
         slot.dataset.command = command;
         
+        
         console.log(`${this.getCommandDisplayName(command)} 명령을 슬롯에 추가!`);
     }
     
@@ -751,6 +818,7 @@ class UIController {
         
         // 뒤의 명령들을 앞으로 당기기
         this.shiftSlotsForward(slotIndex);
+        
         
         console.log(`${this.getCommandDisplayName(command)} 명령을 제거!`);
     }
@@ -807,6 +875,9 @@ class UIController {
         
         console.log(`프로그램 실행 시작! ${commands.length}개 명령`);
         
+        // 프로그램 실행 플래그 설정
+        this.programExecuted = true;
+        
         // 순차적으로 명령 실행
         this.gameState.isRunning = true;
         
@@ -830,7 +901,95 @@ class UIController {
             this.gameState.isRunning = false;
             this.clearSlotHighlight();
             console.log('프로그램 실행 완료!');
+            
+            // 프로그램 실행 완료 후 성공/실패 체크 (명령이 있을 때만)
+            if (commands.length > 0) {
+                setTimeout(() => {
+                    this.checkGameResult();
+                }, 1000); // 충분한 시간 대기
+            }
         }
+    }
+    
+    /**
+     * 게임 결과 체크 및 모달 표시 (프로그램 실행 완료 후에만)
+     */
+    checkGameResult() {
+        console.log('🎯 게임 결과 체크 시작');
+        
+        // 프로그램이 실행되지 않았으면 체크하지 않음
+        if (!this.programExecuted) {
+            console.log('❌ 프로그램이 실행되지 않아 결과 체크 생략');
+            return;
+        }
+        
+        const robot = this.gameState.robot;
+        const stores = this.gameState.stores;
+        
+        // 로봇이 상점 위에 있는지 확인
+        let isOnStore = false;
+        Object.values(stores).forEach(store => {
+            if (store.x === robot.x && store.y === robot.y) {
+                isOnStore = true;
+            }
+        });
+        
+        console.log('🤖 로봇 위치:', { x: robot.x, y: robot.y });
+        console.log('🏪 상점 위치들:', stores);
+        console.log('✅ 상점 도달 여부:', isOnStore);
+        
+        // 모달 표시
+        if (isOnStore) {
+            this.showSuccessModal();
+        } else {
+            this.showFailureModal();
+        }
+        
+        // 체크 후 플래그 리셋
+        this.programExecuted = false;
+    }
+    
+    /**
+     * 성공 모달 표시
+     */
+    showSuccessModal() {
+        const modal = document.getElementById('successModal');
+        if (modal) {
+            modal.style.display = 'flex';
+            modal.classList.remove('hidden');
+            console.log('🎉 성공 모달 표시됨');
+        }
+    }
+    
+    /**
+     * 실패 모달 표시
+     */
+    showFailureModal() {
+        const modal = document.getElementById('failureModal');
+        if (modal) {
+            modal.style.display = 'flex';
+            modal.classList.remove('hidden');
+            console.log('😅 실패 모달 표시됨');
+        }
+    }
+    
+    /**
+     * 모든 모달 숨기기
+     */
+    hideAllModals() {
+        const successModal = document.getElementById('successModal');
+        const failureModal = document.getElementById('failureModal');
+        
+        if (successModal) {
+            successModal.classList.add('hidden');
+            successModal.style.display = 'none';
+        }
+        if (failureModal) {
+            failureModal.classList.add('hidden');
+            failureModal.style.display = 'none';
+        }
+        
+        console.log('🚫 모든 모달 숨김 완료');
     }
     
     /**
@@ -863,8 +1022,12 @@ class UIController {
             slot.classList.remove('filled', 'executing');
             delete slot.dataset.command;
         });
+        
+        
         console.log('모든 슬롯이 초기화되었어요!');
     }
+    
+    
     
     /**
      * 다음 사용 가능한 슬롯 찾기 (왼쪽부터 순서대로)
